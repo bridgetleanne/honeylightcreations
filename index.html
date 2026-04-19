@@ -650,6 +650,214 @@
     font-weight: 600;
   }
 
+  /* ——— DESIGN PICKER ——— */
+  .design-picker-section {
+    background: var(--espresso);
+  }
+
+  .design-picker-section .section-title {
+    margin-bottom: 0.5rem;
+  }
+
+  .design-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+  }
+
+  .design-search {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .design-search input {
+    background: var(--espresso-light);
+    border: 1px solid rgba(240,160,48,0.2);
+    border-radius: 100px;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.85rem;
+    color: var(--cream);
+    font-family: 'Outfit', sans-serif;
+    outline: none;
+    width: 200px;
+    transition: border-color 0.2s;
+  }
+
+  .design-search input::placeholder { color: var(--text-muted); }
+  .design-search input:focus { border-color: rgba(240,160,48,0.45); }
+
+  .filter-chips {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-chip {
+    padding: 0.4rem 0.9rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(240,160,48,0.2);
+    color: var(--text-muted);
+    background: transparent;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .filter-chip:hover { color: var(--cream); border-color: rgba(240,160,48,0.4); }
+
+  .filter-chip.active {
+    background: rgba(240,160,48,0.15);
+    color: var(--honey);
+    border-color: rgba(240,160,48,0.4);
+    font-weight: 600;
+  }
+
+  .designs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .design-thumb {
+    background: var(--espresso-light);
+    border: 2px solid rgba(240,160,48,0.12);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .design-thumb:hover {
+    border-color: rgba(240,160,48,0.4);
+    transform: translateY(-3px);
+  }
+
+  .design-thumb.selected {
+    border-color: var(--honey);
+    box-shadow: 0 0 0 1px var(--honey);
+  }
+
+  .design-thumb-img {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--espresso-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    position: relative;
+  }
+
+  .design-thumb-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .design-selected-badge {
+    display: none;
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 22px; height: 22px;
+    background: var(--honey);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    color: var(--espresso);
+    font-weight: 700;
+  }
+
+  .design-thumb.selected .design-selected-badge {
+    display: flex;
+  }
+
+  .design-thumb-label {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--cream-muted);
+    letter-spacing: 0.01em;
+    border-top: 1px solid rgba(240,160,48,0.1);
+  }
+
+  .design-thumb.selected .design-thumb-label {
+    color: var(--honey);
+  }
+
+  .design-thumb-tag {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .selected-design-bar {
+    display: none;
+    background: var(--warm-brown);
+    border: 1px solid rgba(240,160,48,0.3);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .selected-design-bar.visible { display: flex; }
+
+  .selected-design-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .selected-design-preview {
+    width: 56px;
+    height: 56px;
+    background: var(--espresso-mid);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border: 1px solid rgba(240,160,48,0.2);
+    flex-shrink: 0;
+  }
+
+  .selected-design-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .selected-design-text h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+
+  .selected-design-text p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .no-designs-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
   /* ——— TESTIMONIALS ——— */
   .testimonials-section {
     background: var(--espresso-mid);
@@ -1146,6 +1354,47 @@
   </div>
 </section>
 
+<!-- DESIGN PICKER -->
+<section class="design-picker-section" id="designs">
+  <div class="design-picker-header">
+    <div>
+      <div class="section-tag">Design Library</div>
+      <h2 class="section-title">Pick a design,<br><em style="font-style:italic; color:var(--honey);">make it yours.</em></h2>
+      <p class="section-sub" style="margin-top:0.5rem;">Browse our ready-to-use designs below. Click one to select it, then choose your product and options.</p>
+    </div>
+    <div class="design-search">
+      <input type="text" id="designSearch" placeholder="Search designs…">
+    </div>
+  </div>
+
+  <div class="filter-chips" id="filterChips">
+    <button class="filter-chip active" data-filter="all">All Designs</button>
+    <button class="filter-chip" data-filter="nature">Nature</button>
+    <button class="filter-chip" data-filter="abstract">Abstract</button>
+    <button class="filter-chip" data-filter="typography">Typography</button>
+    <button class="filter-chip" data-filter="geometric">Geometric</button>
+    <button class="filter-chip" data-filter="floral">Floral</button>
+  </div>
+
+  <div class="designs-grid" id="designsGrid"></div>
+
+  <div class="selected-design-bar" id="selectedBar">
+    <div class="selected-design-info">
+      <div class="selected-design-preview">
+        <img id="selectedBarImg" src="" alt="">
+      </div>
+      <div class="selected-design-text">
+        <h4 id="selectedBarName">—</h4>
+        <p>Design selected — choose your product below to continue</p>
+      </div>
+    </div>
+    <div style="display:flex; gap:0.75rem; align-items:center; flex-shrink:0;">
+      <button class="btn-ghost" style="color:var(--text-muted); font-size:0.85rem;" onclick="clearDesign()">Clear selection</button>
+      <a href="#process" class="btn-primary" style="font-size:0.88rem; padding:0.7rem 1.5rem;">Customize This →</a>
+    </div>
+  </div>
+</section>
+
 <!-- HOW IT WORKS -->
 <section id="process">
   <div class="section-tag">The Process</div>
@@ -1185,9 +1434,14 @@
 
     <div class="process-visual">
       <div class="pv-label">Live Preview</div>
-      <div class="design-canvas">
+      <div class="design-canvas" id="configuratorCanvas">
         <div class="canvas-sparkle">✦</div>
-        <div class="canvas-text">HoneyLight</div>
+        <div class="canvas-text" id="canvasPlaceholder">HoneyLight</div>
+        <img id="canvasDesignImg" src="" alt="" style="display:none; width:60%; height:60%; object-fit:contain; position:relative; z-index:1;">
+      </div>
+      <div id="canvasDesignLabel" style="display:none; font-size:0.8rem; color:var(--text-muted); text-align:center; margin-top:-0.5rem;">
+        Selected: <span id="canvasDesignName" style="color:var(--honey); font-weight:600;"></span>
+        <button onclick="clearDesign()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.75rem; margin-left:0.5rem; font-family:'Outfit',sans-serif;">(change)</button>
       </div>
       <div>
         <div class="pv-label" style="margin-bottom:0.5rem;">Product</div>
@@ -1354,7 +1608,128 @@
 </footer>
 
 <script>
-  // Chip interactivity
+  // ——— DESIGN DATA ———
+  // To add your own designs: add entries to this array.
+  // Each entry needs: id, name, file (path to your SVG in the /designs/ folder), category, and tags.
+  // Example: { id: 'mybee', name: 'Golden Bee', file: 'designs/golden-bee.svg', category: 'nature', tags: 'bee insect honey' }
+  const DESIGNS = [
+    { id: 'sunburst',   name: 'Sunburst',       file: 'designs/sunburst.svg',       category: 'geometric', tags: 'sun rays circle' },
+    { id: 'honeybee',  name: 'Honey Bee',       file: 'designs/honeybee.svg',       category: 'nature',    tags: 'bee insect wings' },
+    { id: 'bloom',     name: 'Wild Bloom',      file: 'designs/bloom.svg',          category: 'floral',    tags: 'flower petals bloom' },
+    { id: 'wave',      name: 'Tidal Wave',      file: 'designs/wave.svg',           category: 'abstract',  tags: 'water ocean wave' },
+    { id: 'mountain',  name: 'Mountain Range',  file: 'designs/mountain.svg',       category: 'nature',    tags: 'mountain landscape peaks' },
+    { id: 'hex',       name: 'Hex Grid',        file: 'designs/hex.svg',            category: 'geometric', tags: 'hexagon honeycomb grid' },
+    { id: 'script',    name: 'HoneyLight Type', file: 'designs/honeylight-type.svg',category: 'typography',tags: 'lettering script text' },
+    { id: 'botanica',  name: 'Botanica',        file: 'designs/botanica.svg',       category: 'floral',    tags: 'leaves botanical plant' },
+    { id: 'spark',     name: 'Electric Spark',  file: 'designs/spark.svg',          category: 'abstract',  tags: 'lightning bolt spark energy' },
+    { id: 'moon',      name: 'Crescent Moon',   file: 'designs/moon.svg',           category: 'nature',    tags: 'moon stars night celestial' },
+    { id: 'arch',      name: 'Arch Stack',      file: 'designs/arch.svg',           category: 'geometric', tags: 'arch stripe minimal' },
+    { id: 'wildtype',  name: 'Wild Type',       file: 'designs/wildtype.svg',       category: 'typography',tags: 'bold type letters font' },
+  ];
+
+  let selectedDesign = null;
+  let activeFilter = 'all';
+  let searchQuery = '';
+
+  // ——— RENDER GRID ———
+  function renderGrid() {
+    const grid = document.getElementById('designsGrid');
+    const filtered = DESIGNS.filter(d => {
+      const matchesFilter = activeFilter === 'all' || d.category === activeFilter;
+      const matchesSearch = !searchQuery || d.name.toLowerCase().includes(searchQuery) || d.tags.includes(searchQuery);
+      return matchesFilter && matchesSearch;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="no-designs-msg">No designs match your search. Try a different keyword or category.</div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(d => `
+      <div class="design-thumb ${selectedDesign && selectedDesign.id === d.id ? 'selected' : ''}"
+           data-id="${d.id}" onclick="selectDesign('${d.id}')">
+        <div class="design-thumb-img">
+          <div class="design-selected-badge">✓</div>
+          <img src="${d.file}" alt="${d.name}" loading="lazy"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-size:0.75rem; color:var(--text-muted); text-align:center; flex-direction:column; gap:0.25rem;">
+            <span style="font-size:1.5rem; color:var(--honey); opacity:0.4;">✦</span>
+            <span>${d.name}</span>
+          </div>
+        </div>
+        <div class="design-thumb-label">
+          ${d.name}
+          <div class="design-thumb-tag">${d.category}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ——— SELECT DESIGN ———
+  function selectDesign(id) {
+    selectedDesign = DESIGNS.find(d => d.id === id);
+    if (!selectedDesign) return;
+
+    // Update grid
+    renderGrid();
+
+    // Update configurator canvas
+    const img = document.getElementById('canvasDesignImg');
+    const placeholder = document.getElementById('canvasPlaceholder');
+    const sparkle = document.querySelector('.canvas-sparkle');
+    const label = document.getElementById('canvasDesignLabel');
+    const nameEl = document.getElementById('canvasDesignName');
+
+    img.src = selectedDesign.file;
+    img.style.display = 'block';
+    placeholder.style.display = 'none';
+    if (sparkle) sparkle.style.display = 'none';
+    label.style.display = 'block';
+    nameEl.textContent = selectedDesign.name;
+
+    // Update selected bar
+    const bar = document.getElementById('selectedBar');
+    const barImg = document.getElementById('selectedBarImg');
+    const barName = document.getElementById('selectedBarName');
+    bar.classList.add('visible');
+    barImg.src = selectedDesign.file;
+    barName.textContent = selectedDesign.name;
+  }
+
+  function clearDesign() {
+    selectedDesign = null;
+
+    const img = document.getElementById('canvasDesignImg');
+    const placeholder = document.getElementById('canvasPlaceholder');
+    const sparkle = document.querySelector('.canvas-sparkle');
+    const label = document.getElementById('canvasDesignLabel');
+
+    img.src = '';
+    img.style.display = 'none';
+    placeholder.style.display = 'block';
+    if (sparkle) sparkle.style.display = 'block';
+    label.style.display = 'none';
+
+    document.getElementById('selectedBar').classList.remove('visible');
+    renderGrid();
+  }
+
+  // ——— FILTER CHIPS ———
+  document.getElementById('filterChips').addEventListener('click', e => {
+    if (!e.target.matches('.filter-chip')) return;
+    activeFilter = e.target.dataset.filter;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    e.target.classList.add('active');
+    renderGrid();
+  });
+
+  // ——— SEARCH ———
+  document.getElementById('designSearch').addEventListener('input', e => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    renderGrid();
+  });
+
+  // ——— PRODUCT/COLOR/SIZE CHIPS ———
   document.querySelectorAll('.options-row').forEach(row => {
     row.querySelectorAll('.option-chip').forEach(chip => {
       chip.addEventListener('click', () => {
@@ -1364,7 +1739,7 @@
     });
   });
 
-  // Subtle scroll reveal
+  // ——— SCROLL REVEAL ———
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -1380,6 +1755,9 @@
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     observer.observe(el);
   });
+
+  // Init
+  renderGrid();
 </script>
 </body>
 </html>
