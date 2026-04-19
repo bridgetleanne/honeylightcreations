@@ -6,22 +6,24 @@
 <title>HoneyLight Creations — Custom Apparel & Stickers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;0,900;1,300;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;0,900;1,300;1,700&family=Outfit:wght@300;400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --honey: #C87810;
-    --honey-light: #E89820;
-    --honey-deep: #9A5E08;
-    --cream: #1A0E04;
-    --cream-muted: #4A2E14;
-    --espresso: #FFFAF4;
-    --espresso-mid: #FFF3E6;
+    --honey: #8B1A35;
+    --honey-light: #C04060;
+    --honey-deep: #5A0F22;
+    --gold: #C89A20;
+    --gold-light: #E8C050;
+    --cream: #1A0508;
+    --cream-muted: #4A1525;
+    --espresso: #FEF0F3;
+    --espresso-mid: #FDDCE5;
     --espresso-light: #FFFFFF;
-    --warm-brown: #FDE8C8;
-    --text-muted: #9A7050;
-    --accent-rose: #C4602A;
+    --warm-brown: #F8D0D8;
+    --text-muted: #8A5565;
+    --accent-rose: #C04878;
   }
 
   html { scroll-behavior: smooth; }
@@ -42,9 +44,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(255, 250, 244, 0.92);
+    background: rgba(254, 240, 243, 0.92);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(200, 120, 10, 0.18);
+    border-bottom: 1px solid rgba(139, 26, 53, 0.18);
   }
 
   .logo {
@@ -61,7 +63,7 @@
 
   .logo-dot {
     width: 10px; height: 10px;
-    background: var(--honey);
+    background: var(--gold);
     border-radius: 50%;
     display: inline-block;
     animation: pulse 2.5s ease-in-out infinite;
@@ -122,7 +124,7 @@
     position: absolute;
     top: -200px; right: -200px;
     width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(200,120,10,0.07) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(139,26,53,0.07) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -131,7 +133,7 @@
     position: absolute;
     bottom: -100px; left: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(196,96,42,0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(139,26,53,0.06) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -139,12 +141,12 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(240,160,48,0.12);
-    border: 1px solid rgba(240,160,48,0.3);
+    background: rgba(139,26,53,0.08);
+    border: 1px solid rgba(200,154,32,0.4);
     border-radius: 100px;
     padding: 0.35rem 1rem;
     font-size: 0.8rem;
-    color: var(--honey);
+    color: var(--gold);
     font-weight: 500;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -237,7 +239,7 @@
   .product-card {
     position: absolute;
     background: var(--espresso-light);
-    border: 1px solid rgba(240,160,48,0.2);
+    border: 1px solid rgba(139,26,53,0.2);
     border-radius: 20px;
     padding: 1.25rem;
     display: flex;
@@ -248,7 +250,7 @@
 
   .product-card:hover {
     transform: translateY(-6px) rotate(0deg) !important;
-    border-color: rgba(240,160,48,0.5);
+    border-color: rgba(139,26,53,0.5);
   }
 
   .product-card.card-tee {
@@ -307,7 +309,7 @@
 
   .card-price {
     font-size: 0.75rem;
-    color: var(--honey);
+    color: var(--gold);
     font-weight: 500;
   }
 
@@ -327,8 +329,8 @@
   /* ——— STATS BAR ——— */
   .stats-bar {
     background: var(--espresso-mid);
-    border-top: 1px solid rgba(240,160,48,0.12);
-    border-bottom: 1px solid rgba(240,160,48,0.12);
+    border-top: 1px solid rgba(139,26,53,0.12);
+    border-bottom: 1px solid rgba(139,26,53,0.12);
     padding: 1.5rem 3rem;
     display: flex;
     justify-content: center;
@@ -343,7 +345,7 @@
     font-family: 'Fraunces', serif;
     font-size: 2rem;
     font-weight: 700;
-    color: var(--honey);
+    color: var(--gold);
     line-height: 1;
     margin-bottom: 0.25rem;
   }
@@ -363,7 +365,7 @@
   .section-tag {
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--honey);
+    color: var(--gold);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 1rem;
@@ -377,7 +379,7 @@
     display: inline-block;
     width: 20px;
     height: 1.5px;
-    background: var(--honey);
+    background: var(--gold);
   }
 
   .section-title {
@@ -417,7 +419,7 @@
 
   .product-tile {
     background: var(--espresso-light);
-    border: 1px solid rgba(240,160,48,0.15);
+    border: 1px solid rgba(139,26,53,0.15);
     border-radius: 24px;
     overflow: hidden;
     transition: transform 0.3s, border-color 0.3s;
@@ -426,7 +428,7 @@
 
   .product-tile:hover {
     transform: translateY(-6px);
-    border-color: rgba(240,160,48,0.4);
+    border-color: rgba(139,26,53,0.4);
   }
 
   .tile-img {
@@ -444,7 +446,7 @@
     position: absolute;
     width: 200px; height: 200px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(200,120,10,0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(139,26,53,0.1) 0%, transparent 70%);
   }
 
   .tile-body {
@@ -485,7 +487,7 @@
     font-family: 'Fraunces', serif;
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--honey);
+    color: var(--gold);
   }
 
   .tile-price span {
@@ -496,9 +498,9 @@
   }
 
   .tile-btn {
-    background: rgba(240,160,48,0.15);
+    background: rgba(139,26,53,0.15);
     color: var(--honey);
-    border: 1px solid rgba(240,160,48,0.3);
+    border: 1px solid rgba(139,26,53,0.3);
     border-radius: 100px;
     padding: 0.5rem 1.1rem;
     font-size: 0.8rem;
@@ -535,21 +537,21 @@
     padding: 1.5rem;
     background: var(--espresso-mid);
     border-radius: 16px;
-    border: 1px solid rgba(240,160,48,0.1);
+    border: 1px solid rgba(139,26,53,0.1);
     transition: border-color 0.25s;
     cursor: default;
   }
 
   .step:hover {
-    border-color: rgba(240,160,48,0.35);
+    border-color: rgba(139,26,53,0.35);
   }
 
   .step-num {
     width: 42px;
     height: 42px;
     min-width: 42px;
-    background: rgba(240,160,48,0.12);
-    border: 1px solid rgba(240,160,48,0.3);
+    background: rgba(139,26,53,0.12);
+    border: 1px solid rgba(139,26,53,0.3);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -576,7 +578,7 @@
 
   .process-visual {
     background: var(--espresso-light);
-    border: 1px solid rgba(240,160,48,0.18);
+    border: 1px solid rgba(139,26,53,0.18);
     border-radius: 24px;
     padding: 2.5rem;
     display: flex;
@@ -600,18 +602,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px dashed rgba(240,160,48,0.25);
+    border: 1px dashed rgba(139,26,53,0.25);
     position: relative;
     overflow: hidden;
   }
 
   .canvas-text {
-    font-family: 'Fraunces', serif;
+    font-family: 'Dancing Script', cursive;
     font-size: 2.2rem;
-    font-weight: 900;
-    color: var(--honey);
-    letter-spacing: -0.03em;
-    opacity: 0.85;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: -0.01em;
+    opacity: 0.9;
   }
 
   .canvas-sparkle {
@@ -638,7 +640,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
-    border: 1px solid rgba(240,160,48,0.2);
+    border: 1px solid rgba(139,26,53,0.2);
     color: var(--cream-muted);
     background: var(--espresso-mid);
   }
@@ -674,7 +676,7 @@
 
   .design-search input {
     background: var(--espresso-light);
-    border: 1px solid rgba(240,160,48,0.2);
+    border: 1px solid rgba(139,26,53,0.2);
     border-radius: 100px;
     padding: 0.55rem 1.1rem;
     font-size: 0.85rem;
@@ -686,7 +688,7 @@
   }
 
   .design-search input::placeholder { color: var(--text-muted); }
-  .design-search input:focus { border-color: rgba(240,160,48,0.45); }
+  .design-search input:focus { border-color: rgba(139,26,53,0.45); }
 
   .filter-chips {
     display: flex;
@@ -702,18 +704,18 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
-    border: 1px solid rgba(240,160,48,0.2);
+    border: 1px solid rgba(139,26,53,0.2);
     color: var(--text-muted);
     background: transparent;
     font-family: 'Outfit', sans-serif;
   }
 
-  .filter-chip:hover { color: var(--cream); border-color: rgba(240,160,48,0.4); }
+  .filter-chip:hover { color: var(--cream); border-color: rgba(139,26,53,0.4); }
 
   .filter-chip.active {
-    background: rgba(240,160,48,0.15);
+    background: rgba(139,26,53,0.15);
     color: var(--honey);
-    border-color: rgba(240,160,48,0.4);
+    border-color: rgba(139,26,53,0.4);
     font-weight: 600;
   }
 
@@ -726,7 +728,7 @@
 
   .design-thumb {
     background: var(--espresso-light);
-    border: 2px solid rgba(240,160,48,0.12);
+    border: 2px solid rgba(139,26,53,0.12);
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
@@ -736,7 +738,7 @@
   }
 
   .design-thumb:hover {
-    border-color: rgba(240,160,48,0.4);
+    border-color: rgba(139,26,53,0.4);
     transform: translateY(-3px);
   }
 
@@ -786,7 +788,7 @@
     font-weight: 500;
     color: var(--cream-muted);
     letter-spacing: 0.01em;
-    border-top: 1px solid rgba(240,160,48,0.1);
+    border-top: 1px solid rgba(139,26,53,0.1);
   }
 
   .design-thumb.selected .design-thumb-label {
@@ -802,7 +804,7 @@
   .selected-design-bar {
     display: none;
     background: var(--warm-brown);
-    border: 1px solid rgba(240,160,48,0.3);
+    border: 1px solid rgba(139,26,53,0.3);
     border-radius: 16px;
     padding: 1.25rem 1.5rem;
     align-items: center;
@@ -828,7 +830,7 @@
     align-items: center;
     justify-content: center;
     padding: 0.5rem;
-    border: 1px solid rgba(240,160,48,0.2);
+    border: 1px solid rgba(139,26,53,0.2);
     flex-shrink: 0;
   }
 
@@ -882,7 +884,7 @@
 
   .review-card {
     background: var(--espresso-light);
-    border: 1px solid rgba(240,160,48,0.15);
+    border: 1px solid rgba(139,26,53,0.15);
     border-radius: 20px;
     padding: 1.5rem;
     display: flex;
@@ -893,7 +895,7 @@
 
   .review-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(240,160,48,0.35);
+    border-color: rgba(139,26,53,0.35);
   }
 
   .review-stars {
@@ -935,7 +937,7 @@
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--honey);
-    border: 1px solid rgba(240,160,48,0.3);
+    border: 1px solid rgba(139,26,53,0.3);
     flex-shrink: 0;
   }
 
@@ -962,7 +964,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 50% 50%, rgba(200,120,10,0.06) 0%, transparent 70%);
+    background: radial-gradient(ellipse at 50% 50%, rgba(139,26,53,0.06) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -970,7 +972,7 @@
     font-family: 'Fraunces', serif;
     font-size: 8rem;
     font-weight: 900;
-    color: rgba(200, 120, 10, 0.07);
+    color: rgba(139, 26, 53, 0.07);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1009,7 +1011,7 @@
   /* ——— FOOTER ——— */
   footer {
     background: var(--espresso-mid);
-    border-top: 1px solid rgba(240,160,48,0.12);
+    border-top: 1px solid rgba(139,26,53,0.12);
     padding: 3rem 3rem 2rem;
   }
 
@@ -1054,7 +1056,7 @@
   .footer-col a:hover { color: var(--honey); }
 
   .footer-bottom {
-    border-top: 1px solid rgba(240,160,48,0.1);
+    border-top: 1px solid rgba(139,26,53,0.1);
     padding-top: 1.5rem;
     display: flex;
     justify-content: space-between;
@@ -1080,8 +1082,8 @@
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: rgba(240,160,48,0.1);
-    border: 1px solid rgba(240,160,48,0.2);
+    background: rgba(139,26,53,0.1);
+    border: 1px solid rgba(139,26,53,0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1093,14 +1095,14 @@
   }
 
   .social-link:hover {
-    background: rgba(240,160,48,0.25);
-    border-color: rgba(240,160,48,0.5);
+    background: rgba(139,26,53,0.25);
+    border-color: rgba(139,26,53,0.5);
   }
 
   /* ——— NEWSLETTER ——— */
   .newsletter-bar {
     background: var(--warm-brown);
-    border: 1px solid rgba(240,160,48,0.25);
+    border: 1px solid rgba(139,26,53,0.25);
     border-radius: 20px;
     padding: 1.75rem 2rem;
     display: flex;
@@ -1131,7 +1133,7 @@
   .newsletter-form input {
     flex: 1;
     background: var(--espresso-light);
-    border: 1px solid rgba(240,160,48,0.2);
+    border: 1px solid rgba(139,26,53,0.2);
     border-radius: 100px;
     padding: 0.7rem 1.25rem;
     font-size: 0.88rem;
@@ -1143,7 +1145,7 @@
 
   .newsletter-form input::placeholder { color: var(--text-muted); }
 
-  .newsletter-form input:focus { border-color: rgba(240,160,48,0.5); }
+  .newsletter-form input:focus { border-color: rgba(139,26,53,0.5); }
 
   .newsletter-form button {
     background: var(--honey);
@@ -1259,8 +1261,8 @@
 <svg class="honeycomb-bg" width="400" height="600" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <pattern id="hc" x="0" y="0" width="60" height="104" patternUnits="userSpaceOnUse">
-      <polygon points="30,2 58,17 58,47 30,62 2,47 2,17" stroke="#C87810" stroke-width="1.5" fill="none"/>
-      <polygon points="60,54 88,69 88,99 60,114 32,99 32,69" stroke="#C87810" stroke-width="1.5" fill="none"/>
+      <polygon points="30,2 58,17 58,47 30,62 2,47 2,17" stroke="#8B1A35" stroke-width="1.5" fill="none"/>
+      <polygon points="60,54 88,69 88,99 60,114 32,99 32,69" stroke="#8B1A35" stroke-width="1.5" fill="none"/>
     </pattern>
   </defs>
   <rect width="400" height="600" fill="url(#hc)"/>
@@ -1270,7 +1272,7 @@
 <nav>
   <a href="#" class="logo">
     <span class="logo-dot"></span>
-    HoneyLight Creations
+    HoneyLight <span style="font-family:'Dancing Script',cursive; font-weight:700; color:var(--honey-light); margin-left:0.15em;">Creations</span>
   </a>
   <ul class="nav-links">
     <li><a href="#products">Shop</a></li>
@@ -1286,7 +1288,7 @@
   <div class="hero-content">
     <div class="hero-tag">✦ Custom Drops · Made With Heart</div>
     <h1 class="hero-title">
-      Wear what<br><em>lights you up.</em>
+      Wear what<br><em style="font-family:'Dancing Script',cursive; font-style:normal; color:var(--honey); font-size:1.15em;">lights you up.</em>
     </h1>
     <p class="hero-sub">
       Custom t-shirts, hoodies, and stickers designed exactly how you imagined them. Small batches, big love, shipped to your door.
@@ -1303,9 +1305,9 @@
       <span class="card-badge">New</span>
       <div class="card-img">
         <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 18 L10 30 L20 33 L20 62 L60 62 L60 33 L70 30 L60 18 L50 22 Q40 28 30 22 Z" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
-          <path d="M32 38 Q40 34 48 38" stroke="#C87810" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="40" cy="44" r="4" fill="#C87810" opacity="0.6"/>
+          <path d="M20 18 L10 30 L20 33 L20 62 L60 62 L60 33 L70 30 L60 18 L50 22 Q40 28 30 22 Z" fill="#8B3050" stroke="#8B1A35" stroke-width="1.5"/>
+          <path d="M32 38 Q40 34 48 38" stroke="#8B1A35" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="40" cy="44" r="4" fill="#8B1A35" opacity="0.6"/>
         </svg>
       </div>
       <div class="card-label">Classic Tee</div>
@@ -1316,8 +1318,8 @@
     <div class="product-card card-sticker">
       <div class="card-img">
         <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="40" cy="40" r="28" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
-          <polygon points="40,20 44,33 58,33 47,41 51,55 40,47 29,55 33,41 22,33 36,33" fill="#C87810" opacity="0.85"/>
+          <circle cx="40" cy="40" r="28" fill="#8B3050" stroke="#8B1A35" stroke-width="1.5"/>
+          <polygon points="40,20 44,33 58,33 47,41 51,55 40,47 29,55 33,41 22,33 36,33" fill="#8B1A35" opacity="0.85"/>
         </svg>
       </div>
       <div class="card-label">Die-Cut Stickers</div>
@@ -1328,9 +1330,9 @@
     <div class="product-card card-hoodie">
       <div class="card-img">
         <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 20 L8 38 L22 40 L22 68 L58 68 L58 40 L72 38 L62 20 L52 24 Q40 32 28 24 Z" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
-          <path d="M34 22 Q40 16 46 22" stroke="#C87810" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-          <rect x="34" y="44" width="12" height="8" rx="2" fill="#C87810" opacity="0.5"/>
+          <path d="M18 20 L8 38 L22 40 L22 68 L58 68 L58 40 L72 38 L62 20 L52 24 Q40 32 28 24 Z" fill="#8B3050" stroke="#8B1A35" stroke-width="1.5"/>
+          <path d="M34 22 Q40 16 46 22" stroke="#8B1A35" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <rect x="34" y="44" width="12" height="8" rx="2" fill="#8B1A35" opacity="0.5"/>
         </svg>
       </div>
       <div class="card-label">Premium Hoodie</div>
@@ -1364,7 +1366,7 @@
   <div class="products-header">
     <div>
       <div class="section-tag">The Collection</div>
-      <h2 class="section-title">Find your<br><em style="font-style:italic; color:var(--honey);">perfect piece.</em></h2>
+      <h2 class="section-title">Find your<br><em style="font-family:'Dancing Script',cursive; font-style:normal; color:var(--honey);">perfect piece.</em></h2>
     </div>
     <a href="#" class="btn-ghost" style="color:var(--honey);">View all products</a>
   </div>
@@ -1375,9 +1377,9 @@
       <div class="tile-img">
         <div class="tile-img-glow"></div>
         <svg width="160" height="140" viewBox="0 0 160 140" fill="none">
-          <path d="M45 30 L20 58 L45 64 L45 120 L115 120 L115 64 L140 58 L115 30 L95 40 Q80 52 65 40 Z" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
-          <circle cx="80" cy="82" r="14" fill="rgba(200,120,10,0.15)" stroke="#C87810" stroke-width="1"/>
-          <path d="M72 82 Q80 76 88 82" stroke="#C87810" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M45 30 L20 58 L45 64 L45 120 L115 120 L115 64 L140 58 L115 30 L95 40 Q80 52 65 40 Z" fill="#8B3050" stroke="#8B1A35" stroke-width="1.5"/>
+          <circle cx="80" cy="82" r="14" fill="rgba(139,26,53,0.15)" stroke="#8B1A35" stroke-width="1"/>
+          <path d="M72 82 Q80 76 88 82" stroke="#8B1A35" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="tile-body">
@@ -1396,10 +1398,10 @@
       <div class="tile-img">
         <div class="tile-img-glow"></div>
         <svg width="160" height="140" viewBox="0 0 160 140" fill="none">
-          <circle cx="80" cy="70" r="40" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
-          <polygon points="80,40 86,58 106,58 90,70 96,88 80,76 64,88 70,70 54,58 74,58" fill="#C87810" opacity="0.85"/>
-          <rect x="32" y="16" width="28" height="18" rx="4" fill="#C8906A" stroke="#C87810" stroke-width="1" transform="rotate(-12 46 25)"/>
-          <circle cx="118" cy="108" r="14" fill="#C8906A" stroke="#C87810" stroke-width="1"/>
+          <circle cx="80" cy="70" r="40" fill="#8B3050" stroke="#8B1A35" stroke-width="1.5"/>
+          <polygon points="80,40 86,58 106,58 90,70 96,88 80,76 64,88 70,70 54,58 74,58" fill="#8B1A35" opacity="0.85"/>
+          <rect x="32" y="16" width="28" height="18" rx="4" fill="#8B3050" stroke="#8B1A35" stroke-width="1" transform="rotate(-12 46 25)"/>
+          <circle cx="118" cy="108" r="14" fill="#8B3050" stroke="#8B1A35" stroke-width="1"/>
         </svg>
       </div>
       <div class="tile-body">
@@ -1418,9 +1420,9 @@
       <div class="tile-img">
         <div class="tile-img-glow"></div>
         <svg width="160" height="140" viewBox="0 0 160 140" fill="none">
-          <path d="M35 32 L12 72 L40 76 L40 124 L120 124 L120 76 L148 72 L125 32 L103 44 Q80 58 57 44 Z" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
-          <path d="M65 38 Q80 24 95 38" stroke="#C87810" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-          <rect x="68" y="86" width="24" height="14" rx="4" fill="rgba(200,120,10,0.2)" stroke="#C87810" stroke-width="1"/>
+          <path d="M35 32 L12 72 L40 76 L40 124 L120 124 L120 76 L148 72 L125 32 L103 44 Q80 58 57 44 Z" fill="#8B3050" stroke="#8B1A35" stroke-width="1.5"/>
+          <path d="M65 38 Q80 24 95 38" stroke="#8B1A35" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <rect x="68" y="86" width="24" height="14" rx="4" fill="rgba(139,26,53,0.2)" stroke="#8B1A35" stroke-width="1"/>
         </svg>
       </div>
       <div class="tile-body">
@@ -1441,7 +1443,7 @@
   <div class="design-picker-header">
     <div>
       <div class="section-tag">Design Library</div>
-      <h2 class="section-title">Pick a design,<br><em style="font-style:italic; color:var(--honey);">make it yours.</em></h2>
+      <h2 class="section-title">Pick a design,<br><em style="font-family:'Dancing Script',cursive; font-style:normal; color:var(--honey);">make it yours.</em></h2>
       <p class="section-sub" style="margin-top:0.5rem;">Browse our ready-to-use designs below. Click one to select it, then choose your product and options.</p>
     </div>
     <div class="design-search">
@@ -1480,7 +1482,7 @@
 <!-- HOW IT WORKS -->
 <section id="process">
   <div class="section-tag">The Process</div>
-  <h2 class="section-title">From idea to doorstep<br>in a few clicks.</h2>
+  <h2 class="section-title">From idea to doorstep<br><em style="font-family:'Dancing Script',cursive; font-style:normal; color:var(--honey);">in a few clicks.</em></h2>
 
   <div class="process-grid">
     <div class="step-list">
@@ -1615,7 +1617,7 @@
   <div class="section-tag" style="justify-content:center;">
     <span>Ready when you are</span>
   </div>
-  <h2 class="section-title">Your next favorite thing<br><em style="font-style:italic; color:var(--honey);">starts here.</em></h2>
+  <h2 class="section-title">Your next favorite thing<br><em style="font-family:'Dancing Script',cursive; font-style:normal; color:var(--honey);">starts here.</em></h2>
   <p class="section-sub">Whether it's one sticker or 500 hoodies, we've got you. No minimum orders, no design degree required.</p>
   <div class="cta-actions">
     <a href="#" class="btn-primary" style="font-size:1rem; padding:1rem 2.5rem;">Start Your Order</a>
@@ -1640,7 +1642,7 @@
     <div class="footer-brand">
       <a href="#" class="logo">
         <span class="logo-dot"></span>
-        HoneyLight Creations
+        HoneyLight <span style="font-family:'Dancing Script',cursive; font-weight:700; color:var(--honey-light); margin-left:0.15em;">Creations</span>
       </a>
       <p>Small-batch, big-heart custom merch. We print what you love and ship it fast. Based somewhere sunny, delivering everywhere.</p>
     </div>
