@@ -11,17 +11,17 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --honey: #F0A030;
-    --honey-light: #F8C870;
-    --honey-deep: #C07010;
-    --cream: #FFF5E4;
-    --cream-muted: #E8D8C0;
-    --espresso: #0E0804;
-    --espresso-mid: #1C1008;
-    --espresso-light: #2E1C0E;
-    --warm-brown: #3D2410;
-    --text-muted: #A08060;
-    --accent-rose: #D4704A;
+    --honey: #C87810;
+    --honey-light: #E89820;
+    --honey-deep: #9A5E08;
+    --cream: #1A0E04;
+    --cream-muted: #4A2E14;
+    --espresso: #FFFAF4;
+    --espresso-mid: #FFF3E6;
+    --espresso-light: #FFFFFF;
+    --warm-brown: #FDE8C8;
+    --text-muted: #9A7050;
+    --accent-rose: #C4602A;
   }
 
   html { scroll-behavior: smooth; }
@@ -42,9 +42,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(14, 8, 4, 0.85);
+    background: rgba(255, 250, 244, 0.92);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(240, 160, 48, 0.15);
+    border-bottom: 1px solid rgba(200, 120, 10, 0.18);
   }
 
   .logo {
@@ -79,7 +79,7 @@
   }
 
   .nav-links a {
-    color: var(--cream-muted);
+    color: var(--text-muted);
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 400;
@@ -122,7 +122,7 @@
     position: absolute;
     top: -200px; right: -200px;
     width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(240,160,48,0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(200,120,10,0.07) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -131,7 +131,7 @@
     position: absolute;
     bottom: -100px; left: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(212,112,74,0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(196,96,42,0.06) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -444,7 +444,7 @@
     position: absolute;
     width: 200px; height: 200px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(240,160,48,0.18) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(200,120,10,0.1) 0%, transparent 70%);
   }
 
   .tile-body {
@@ -962,7 +962,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 50% 50%, rgba(240,160,48,0.1) 0%, transparent 70%);
+    background: radial-gradient(ellipse at 50% 50%, rgba(200,120,10,0.06) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -970,7 +970,7 @@
     font-family: 'Fraunces', serif;
     font-size: 8rem;
     font-weight: 900;
-    color: rgba(240,160,48,0.06);
+    color: rgba(200, 120, 10, 0.07);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1177,8 +1177,8 @@
 <svg class="honeycomb-bg" width="400" height="600" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <pattern id="hc" x="0" y="0" width="60" height="104" patternUnits="userSpaceOnUse">
-      <polygon points="30,2 58,17 58,47 30,62 2,47 2,17" stroke="#F0A030" stroke-width="1.5" fill="none"/>
-      <polygon points="60,54 88,69 88,99 60,114 32,99 32,69" stroke="#F0A030" stroke-width="1.5" fill="none"/>
+      <polygon points="30,2 58,17 58,47 30,62 2,47 2,17" stroke="#C87810" stroke-width="1.5" fill="none"/>
+      <polygon points="60,54 88,69 88,99 60,114 32,99 32,69" stroke="#C87810" stroke-width="1.5" fill="none"/>
     </pattern>
   </defs>
   <rect width="400" height="600" fill="url(#hc)"/>
@@ -1221,9 +1221,9 @@
       <span class="card-badge">New</span>
       <div class="card-img">
         <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 18 L10 30 L20 33 L20 62 L60 62 L60 33 L70 30 L60 18 L50 22 Q40 28 30 22 Z" fill="#2E1C0E" stroke="#F0A030" stroke-width="1.5"/>
-          <path d="M32 38 Q40 34 48 38" stroke="#F0A030" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="40" cy="44" r="4" fill="#F0A030" opacity="0.6"/>
+          <path d="M20 18 L10 30 L20 33 L20 62 L60 62 L60 33 L70 30 L60 18 L50 22 Q40 28 30 22 Z" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
+          <path d="M32 38 Q40 34 48 38" stroke="#C87810" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="40" cy="44" r="4" fill="#C87810" opacity="0.6"/>
         </svg>
       </div>
       <div class="card-label">Classic Tee</div>
@@ -1234,8 +1234,8 @@
     <div class="product-card card-sticker">
       <div class="card-img">
         <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="40" cy="40" r="28" fill="#2E1C0E" stroke="#F0A030" stroke-width="1.5"/>
-          <polygon points="40,20 44,33 58,33 47,41 51,55 40,47 29,55 33,41 22,33 36,33" fill="#F0A030" opacity="0.8"/>
+          <circle cx="40" cy="40" r="28" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
+          <polygon points="40,20 44,33 58,33 47,41 51,55 40,47 29,55 33,41 22,33 36,33" fill="#C87810" opacity="0.85"/>
         </svg>
       </div>
       <div class="card-label">Die-Cut Stickers</div>
@@ -1246,9 +1246,9 @@
     <div class="product-card card-hoodie">
       <div class="card-img">
         <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 20 L8 38 L22 40 L22 68 L58 68 L58 40 L72 38 L62 20 L52 24 Q40 32 28 24 Z" fill="#2E1C0E" stroke="#F0A030" stroke-width="1.5"/>
-          <path d="M34 22 Q40 16 46 22" stroke="#F0A030" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-          <rect x="34" y="44" width="12" height="8" rx="2" fill="#F0A030" opacity="0.5"/>
+          <path d="M18 20 L8 38 L22 40 L22 68 L58 68 L58 40 L72 38 L62 20 L52 24 Q40 32 28 24 Z" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
+          <path d="M34 22 Q40 16 46 22" stroke="#C87810" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <rect x="34" y="44" width="12" height="8" rx="2" fill="#C87810" opacity="0.5"/>
         </svg>
       </div>
       <div class="card-label">Premium Hoodie</div>
@@ -1293,9 +1293,9 @@
       <div class="tile-img">
         <div class="tile-img-glow"></div>
         <svg width="160" height="140" viewBox="0 0 160 140" fill="none">
-          <path d="M45 30 L20 58 L45 64 L45 120 L115 120 L115 64 L140 58 L115 30 L95 40 Q80 52 65 40 Z" fill="#2E1C0E" stroke="#F0A030" stroke-width="1.5"/>
-          <circle cx="80" cy="82" r="14" fill="rgba(240,160,48,0.15)" stroke="#F0A030" stroke-width="1"/>
-          <path d="M72 82 Q80 76 88 82" stroke="#F0A030" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M45 30 L20 58 L45 64 L45 120 L115 120 L115 64 L140 58 L115 30 L95 40 Q80 52 65 40 Z" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
+          <circle cx="80" cy="82" r="14" fill="rgba(200,120,10,0.15)" stroke="#C87810" stroke-width="1"/>
+          <path d="M72 82 Q80 76 88 82" stroke="#C87810" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="tile-body">
@@ -1314,10 +1314,10 @@
       <div class="tile-img">
         <div class="tile-img-glow"></div>
         <svg width="160" height="140" viewBox="0 0 160 140" fill="none">
-          <circle cx="80" cy="70" r="40" fill="#2E1C0E" stroke="#F0A030" stroke-width="1.5"/>
-          <polygon points="80,40 86,58 106,58 90,70 96,88 80,76 64,88 70,70 54,58 74,58" fill="#F0A030" opacity="0.7"/>
-          <rect x="32" y="16" width="28" height="18" rx="4" fill="#2E1C0E" stroke="#F0A030" stroke-width="1" transform="rotate(-12 46 25)"/>
-          <circle cx="118" cy="108" r="14" fill="#2E1C0E" stroke="#F0A030" stroke-width="1"/>
+          <circle cx="80" cy="70" r="40" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
+          <polygon points="80,40 86,58 106,58 90,70 96,88 80,76 64,88 70,70 54,58 74,58" fill="#C87810" opacity="0.85"/>
+          <rect x="32" y="16" width="28" height="18" rx="4" fill="#C8906A" stroke="#C87810" stroke-width="1" transform="rotate(-12 46 25)"/>
+          <circle cx="118" cy="108" r="14" fill="#C8906A" stroke="#C87810" stroke-width="1"/>
         </svg>
       </div>
       <div class="tile-body">
@@ -1336,9 +1336,9 @@
       <div class="tile-img">
         <div class="tile-img-glow"></div>
         <svg width="160" height="140" viewBox="0 0 160 140" fill="none">
-          <path d="M35 32 L12 72 L40 76 L40 124 L120 124 L120 76 L148 72 L125 32 L103 44 Q80 58 57 44 Z" fill="#2E1C0E" stroke="#F0A030" stroke-width="1.5"/>
-          <path d="M65 38 Q80 24 95 38" stroke="#F0A030" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-          <rect x="68" y="86" width="24" height="14" rx="4" fill="rgba(240,160,48,0.2)" stroke="#F0A030" stroke-width="1"/>
+          <path d="M35 32 L12 72 L40 76 L40 124 L120 124 L120 76 L148 72 L125 32 L103 44 Q80 58 57 44 Z" fill="#C8906A" stroke="#C87810" stroke-width="1.5"/>
+          <path d="M65 38 Q80 24 95 38" stroke="#C87810" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <rect x="68" y="86" width="24" height="14" rx="4" fill="rgba(200,120,10,0.2)" stroke="#C87810" stroke-width="1"/>
         </svg>
       </div>
       <div class="tile-body">
@@ -1625,7 +1625,6 @@
     { id: 'moon',      name: 'Crescent Moon',   file: 'designs/moon.svg',           category: 'nature',    tags: 'moon stars night celestial' },
     { id: 'arch',      name: 'Arch Stack',      file: 'designs/arch.svg',           category: 'geometric', tags: 'arch stripe minimal' },
     { id: 'wildtype',  name: 'Wild Type',       file: 'designs/wildtype.svg',       category: 'typography',tags: 'bold type letters font' },
-    { id: 'ljlaw-logo',  name: 'LJ Law Logo',       file: 'designs/lj square.png',       category: 'logo',tags: 'bold type letters font' },
   ];
 
   let selectedDesign = null;
