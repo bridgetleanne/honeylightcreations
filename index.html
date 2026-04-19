@@ -1245,6 +1245,51 @@
     .options-row { flex-wrap: wrap; }
   }
 
+  /* ——— ORDER BUILDER ——— */
+  .ob-chip {
+    padding: 0.45rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid rgba(139,26,53,0.2);
+    color: var(--text-muted);
+    background: var(--espresso-mid);
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.2s;
+  }
+  .ob-chip:hover { border-color: rgba(139,26,53,0.4); color: var(--cream); }
+  .ob-chip.active {
+    background: var(--honey);
+    color: white;
+    border-color: var(--honey);
+    font-weight: 600;
+  }
+  .ob-product-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(139,26,53,0.15);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: var(--espresso-mid);
+  }
+  .ob-product-option:hover { border-color: rgba(139,26,53,0.35); }
+  .ob-product-option:has(input:checked) {
+    border-color: var(--honey);
+    background: rgba(139,26,53,0.06);
+  }
+  .ob-opt-label { font-size: 0.9rem; color: var(--cream); font-weight: 500; flex: 1; }
+  .ob-opt-price { font-size: 0.85rem; color: var(--gold); font-weight: 600; }
+
+  @media (max-width: 768px) {
+    #order > div > div[style*="grid-template-columns"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
   /* ——— DECORATIVE HONEYCOMB ——— */
   .honeycomb-bg {
     position: fixed;
@@ -1278,8 +1323,8 @@
     <li><a href="#products">Shop</a></li>
     <li><a href="#process">How It Works</a></li>
     <li><a href="#reviews">Reviews</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#" class="nav-cta">Start Designing</a></li>
+    <li><a href="#order">Order</a></li>
+    <li><a href="#order" class="nav-cta">Place an Order</a></li>
   </ul>
 </nav>
 
@@ -1489,71 +1534,38 @@
       <div class="step">
         <div class="step-num">01</div>
         <div class="step-content">
-          <h3>Choose your product</h3>
-          <p>Pick from t-shirts, hoodies, or stickers. Select style, color, size, and quantity — we keep it simple.</p>
+          <h3>Browse the design library</h3>
+          <p>Scroll through our gallery above and find a design you love. Click it to select it — it'll carry through to your order automatically.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">02</div>
         <div class="step-content">
-          <h3>Upload or create your design</h3>
-          <p>Drop in your own artwork, or let our designers bring your vision to life. We review every file before printing.</p>
+          <h3>Build your order below</h3>
+          <p>Choose your product, color, size, and quantity. We'll calculate your total as you go.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
         <div class="step-content">
-          <h3>We print & ship fast</h3>
-          <p>Orders are printed within 1–2 business days and ship in 5–7. Tracking included, always.</p>
+          <h3>Pay securely via Square</h3>
+          <p>Click "Proceed to Payment" and your full order details are sent straight to Square checkout — no copying or pasting needed.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">04</div>
         <div class="step-content">
-          <h3>Love it or we fix it</h3>
-          <p>Not happy? We'll reprint or refund. No hoops, no hassle. Your satisfaction is the whole point.</p>
+          <h3>We print & ship in 5–7 days</h3>
+          <p>Once payment is confirmed we get to work. You'll receive tracking info by email when your order ships.</p>
         </div>
       </div>
     </div>
 
-    <div class="process-visual">
-      <div class="pv-label">Live Preview</div>
-      <div class="design-canvas" id="configuratorCanvas">
-        <div class="canvas-sparkle">✦</div>
-        <div class="canvas-text" id="canvasPlaceholder">HoneyLight</div>
-        <img id="canvasDesignImg" src="" alt="" style="display:none; width:60%; height:60%; object-fit:contain; position:relative; z-index:1;">
-      </div>
-      <div id="canvasDesignLabel" style="display:none; font-size:0.8rem; color:var(--text-muted); text-align:center; margin-top:-0.5rem;">
-        Selected: <span id="canvasDesignName" style="color:var(--honey); font-weight:600;"></span>
-        <button onclick="clearDesign()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.75rem; margin-left:0.5rem; font-family:'Outfit',sans-serif;">(change)</button>
-      </div>
-      <div>
-        <div class="pv-label" style="margin-bottom:0.5rem;">Product</div>
-        <div class="options-row">
-          <div class="option-chip active">T-Shirt</div>
-          <div class="option-chip">Hoodie</div>
-          <div class="option-chip">Sticker</div>
-        </div>
-      </div>
-      <div>
-        <div class="pv-label" style="margin-bottom:0.5rem;">Color</div>
-        <div class="options-row">
-          <div class="option-chip active">Black</div>
-          <div class="option-chip">White</div>
-          <div class="option-chip">Sand</div>
-          <div class="option-chip">Forest</div>
-        </div>
-      </div>
-      <div>
-        <div class="pv-label" style="margin-bottom:0.5rem;">Size</div>
-        <div class="options-row">
-          <div class="option-chip">S</div>
-          <div class="option-chip">M</div>
-          <div class="option-chip active">L</div>
-          <div class="option-chip">XL</div>
-        </div>
-      </div>
-      <a href="#" class="btn-primary" style="text-align:center; display:block; margin-top:0.5rem;">Add to Cart — $24</a>
+    <div class="process-visual" style="justify-content:center; align-items:center; text-align:center;">
+      <div style="font-size:2rem; margin-bottom:0.5rem;">✦</div>
+      <p style="font-family:'Fraunces',serif; font-size:1.2rem; font-weight:700; color:var(--cream); margin-bottom:0.4rem;">Ready to order?</p>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.5rem; line-height:1.6;">Browse the design gallery above, then head to the order builder below.</p>
+      <a href="#order" class="btn-primary">Build My Order ↓</a>
     </div>
   </div>
 </section>
@@ -1620,8 +1632,170 @@
   <h2 class="section-title">Your next favorite thing<br><em style="font-family:'Dancing Script',cursive; font-style:normal; color:var(--honey);">starts here.</em></h2>
   <p class="section-sub">Whether it's one sticker or 500 hoodies, we've got you. No minimum orders, no design degree required.</p>
   <div class="cta-actions">
-    <a href="#" class="btn-primary" style="font-size:1rem; padding:1rem 2.5rem;">Start Your Order</a>
+    <a href="#order" class="btn-primary" style="font-size:1rem; padding:1rem 2.5rem;">Place an Order</a>
     <a href="mailto:hello@honeylightcreations.com" class="btn-ghost">Email us instead</a>
+  </div>
+</section>
+
+<!-- ORDER BUILDER -->
+<section id="order" style="background: var(--espresso-mid); padding: 6rem 3rem;">
+  <div style="max-width: 860px; margin: 0 auto;">
+    <div class="section-tag">Build Your Order</div>
+    <h2 class="section-title">
+      Make it yours,<br>
+      <em style="font-family:'Dancing Script',cursive; font-style:normal; color:var(--honey);">we'll handle the rest.</em>
+    </h2>
+    <p class="section-sub" style="margin-bottom: 2.5rem;">
+      Select your options below. Your full order details will be sent automatically to Square checkout — no copy-pasting needed.
+    </p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; align-items:start;">
+
+      <!-- LEFT: ORDER FORM -->
+      <div style="display:flex; flex-direction:column; gap:1.25rem;">
+
+        <!-- Design -->
+        <div style="background:var(--espresso-light); border:1px solid rgba(139,26,53,0.15); border-radius:20px; padding:1.5rem;">
+          <div class="pv-label" style="margin-bottom:0.75rem;">① Design</div>
+          <div id="ob-design-preview" style="display:none; align-items:center; gap:0.75rem; margin-bottom:0.75rem; padding:0.6rem 0.75rem; background:var(--espresso-mid); border-radius:12px;">
+            <img id="ob-design-img" src="" alt="" style="width:36px; height:36px; object-fit:contain; border-radius:6px; background:white; padding:3px;">
+            <span id="ob-design-name" style="font-size:0.88rem; font-weight:600; color:var(--cream);"></span>
+            <button onclick="clearDesign()" style="margin-left:auto; background:none; border:none; font-size:0.75rem; color:var(--text-muted); cursor:pointer; font-family:'Outfit',sans-serif;">Change ↑</button>
+          </div>
+          <div id="ob-design-empty" style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
+            No design selected yet — <a href="#designs" style="color:var(--honey); text-decoration:none; font-weight:600;">browse the gallery above</a> and click one to select it.
+          </div>
+        </div>
+
+        <!-- Product -->
+        <div style="background:var(--espresso-light); border:1px solid rgba(139,26,53,0.15); border-radius:20px; padding:1.5rem;">
+          <div class="pv-label" style="margin-bottom:0.75rem;">② Product</div>
+          <div style="display:flex; flex-direction:column; gap:0.5rem;" id="ob-products">
+            <label class="ob-product-option" data-price="20" data-product="T-Shirt">
+              <input type="radio" name="ob-product" value="T-Shirt" style="accent-color:var(--honey);">
+              <span class="ob-opt-label">T-Shirt</span>
+              <span class="ob-opt-price">$20.00</span>
+            </label>
+            <label class="ob-product-option" data-price="55" data-product="Hoodie">
+              <input type="radio" name="ob-product" value="Hoodie" style="accent-color:var(--honey);">
+              <span class="ob-opt-label">Hoodie</span>
+              <span class="ob-opt-price">$55.00</span>
+            </label>
+            <label class="ob-product-option" data-price="0.50" data-product="Sticker">
+              <input type="radio" name="ob-product" value="Sticker" style="accent-color:var(--honey);">
+              <span class="ob-opt-label">Sticker (2×2 in)</span>
+              <span class="ob-opt-price">$0.50 ea.</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Color — hidden for stickers -->
+        <div style="background:var(--espresso-light); border:1px solid rgba(139,26,53,0.15); border-radius:20px; padding:1.5rem;" id="ob-color-row">
+          <div class="pv-label" style="margin-bottom:0.75rem;">③ Color</div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;" id="ob-colors">
+            <button class="ob-chip active" data-value="Black">Black</button>
+            <button class="ob-chip" data-value="White">White</button>
+            <button class="ob-chip" data-value="Sand">Sand</button>
+            <button class="ob-chip" data-value="Forest Green">Forest Green</button>
+            <button class="ob-chip" data-value="Navy">Navy</button>
+            <button class="ob-chip" data-value="Red">Red</button>
+          </div>
+        </div>
+
+        <!-- Size — hidden for stickers -->
+        <div style="background:var(--espresso-light); border:1px solid rgba(139,26,53,0.15); border-radius:20px; padding:1.5rem;" id="ob-size-row">
+          <div class="pv-label" style="margin-bottom:0.75rem;">④ Size</div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;" id="ob-sizes">
+            <button class="ob-chip" data-value="S">S</button>
+            <button class="ob-chip" data-value="M">M</button>
+            <button class="ob-chip" data-value="L">L</button>
+            <button class="ob-chip" data-value="XL">XL</button>
+            <button class="ob-chip" data-value="2XL">2XL</button>
+            <button class="ob-chip" data-value="3XL">3XL</button>
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div style="background:var(--espresso-light); border:1px solid rgba(139,26,53,0.15); border-radius:20px; padding:1.5rem;">
+          <div class="pv-label" style="margin-bottom:0.75rem;"><span id="ob-qty-label">⑤</span> Quantity</div>
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <button onclick="changeQty(-1)" style="width:36px; height:36px; border-radius:50%; border:1px solid rgba(139,26,53,0.25); background:var(--espresso-mid); color:var(--cream); font-size:1.1rem; cursor:pointer; font-family:'Outfit',sans-serif;">−</button>
+            <span id="ob-qty-display" style="font-family:'Fraunces',serif; font-size:1.5rem; font-weight:700; color:var(--cream); min-width:2rem; text-align:center;">1</span>
+            <button onclick="changeQty(1)" style="width:36px; height:36px; border-radius:50%; border:1px solid rgba(139,26,53,0.25); background:var(--espresso-mid); color:var(--cream); font-size:1.1rem; cursor:pointer; font-family:'Outfit',sans-serif;">+</button>
+            <span style="font-size:0.8rem; color:var(--text-muted); margin-left:0.25rem;">Mix &amp; match designs — place one order per design/size combo</span>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div style="background:var(--espresso-light); border:1px solid rgba(139,26,53,0.15); border-radius:20px; padding:1.5rem;">
+          <div class="pv-label" style="margin-bottom:0.75rem;"><span id="ob-contact-label">⑥</span> Your Info</div>
+          <div style="display:flex; flex-direction:column; gap:0.75rem;">
+            <input id="ob-name" type="text" placeholder="Full name" style="width:100%; background:var(--espresso-mid); border:1px solid rgba(139,26,53,0.2); border-radius:10px; padding:0.65rem 0.9rem; font-size:0.88rem; color:var(--cream); font-family:'Outfit',sans-serif; outline:none;">
+            <input id="ob-email" type="email" placeholder="Email address" style="width:100%; background:var(--espresso-mid); border:1px solid rgba(139,26,53,0.2); border-radius:10px; padding:0.65rem 0.9rem; font-size:0.88rem; color:var(--cream); font-family:'Outfit',sans-serif; outline:none;">
+            <input id="ob-notes" type="text" placeholder="Special requests (optional)" style="width:100%; background:var(--espresso-mid); border:1px solid rgba(139,26,53,0.2); border-radius:10px; padding:0.65rem 0.9rem; font-size:0.88rem; color:var(--cream); font-family:'Outfit',sans-serif; outline:none;">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: ORDER SUMMARY -->
+      <div style="position:sticky; top:90px;">
+        <div style="background:var(--espresso-light); border:2px solid rgba(139,26,53,0.2); border-radius:20px; padding:1.75rem;">
+          <div class="pv-label" style="margin-bottom:1rem;">Order Summary</div>
+
+          <!-- Summary lines -->
+          <div style="display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.25rem; min-height:120px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.88rem;">
+              <span style="color:var(--text-muted);">Design</span>
+              <span id="sum-design" style="color:var(--cream); font-weight:500; text-align:right; max-width:160px;">—</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.88rem;">
+              <span style="color:var(--text-muted);">Product</span>
+              <span id="sum-product" style="color:var(--cream); font-weight:500;">—</span>
+            </div>
+            <div id="sum-color-row" style="display:flex; justify-content:space-between; font-size:0.88rem;">
+              <span style="color:var(--text-muted);">Color</span>
+              <span id="sum-color" style="color:var(--cream); font-weight:500;">—</span>
+            </div>
+            <div id="sum-size-row" style="display:flex; justify-content:space-between; font-size:0.88rem;">
+              <span style="color:var(--text-muted);">Size</span>
+              <span id="sum-size" style="color:var(--cream); font-weight:500;">—</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.88rem;">
+              <span style="color:var(--text-muted);">Qty</span>
+              <span id="sum-qty" style="color:var(--cream); font-weight:500;">1</span>
+            </div>
+            <div id="sum-notes-row" style="display:none; justify-content:space-between; font-size:0.88rem;">
+              <span style="color:var(--text-muted);">Notes</span>
+              <span id="sum-notes" style="color:var(--cream); font-weight:500; text-align:right; max-width:160px;"></span>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid rgba(139,26,53,0.15); padding-top:1rem; margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:baseline;">
+            <span style="font-size:0.88rem; color:var(--text-muted);">Total</span>
+            <span id="sum-total" style="font-family:'Fraunces',serif; font-size:2rem; font-weight:700; color:var(--gold);">$—</span>
+          </div>
+
+          <!-- Validation message -->
+          <div id="ob-validation" style="display:none; background:rgba(139,26,53,0.08); border:1px solid rgba(139,26,53,0.25); border-radius:10px; padding:0.75rem 1rem; font-size:0.82rem; color:var(--honey); margin-bottom:1rem; line-height:1.5;"></div>
+
+          <!-- Payment button -->
+          <button id="ob-pay-btn" onclick="proceedToPayment()" class="btn-primary" style="width:100%; text-align:center; padding:1rem; font-size:1rem; border:none; cursor:pointer;">
+            Proceed to Payment →
+          </button>
+
+          <!-- Fallback copy button -->
+          <button id="ob-copy-btn" onclick="copyOrderDetails()" style="display:none; width:100%; text-align:center; padding:0.75rem; font-size:0.85rem; margin-top:0.75rem; background:none; border:1px solid rgba(139,26,53,0.25); border-radius:100px; color:var(--text-muted); cursor:pointer; font-family:'Outfit',sans-serif;">
+            📋 Copy order details instead
+          </button>
+
+          <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:1rem; line-height:1.5;">
+            Secure checkout via Square. We accept all major cards, Apple Pay &amp; Google Pay.
+          </p>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -1661,7 +1835,8 @@
     <div class="footer-col">
       <h4>Info</h4>
       <ul>
-        <li><a href="#">How It Works</a></li>
+        <li><a href="#order">Place an Order</a></li>
+        <li><a href="#process">How It Works</a></li>
         <li><a href="#">Sizing Guide</a></li>
         <li><a href="#">Design Tips</a></li>
         <li><a href="#">Bulk Orders</a></li>
@@ -1692,10 +1867,15 @@
 </footer>
 
 <script>
+  // ================================================================
+  // ★ SQUARE PAYMENT LINK — PASTE YOUR LINK HERE AFTER SETUP ★
+  // In Square dashboard: Online → Payment Links → Create Link
+  // Set it as "Custom Amount" so the total flows through automatically
+  // Example: 'https://square.link/u/XXXXXXXX'
+  const SQUARE_PAYMENT_LINK = '';
+  // ================================================================
+
   // ——— DESIGN DATA ———
-  // To add your own designs: add entries to this array.
-  // Each entry needs: id, name, file (path to your SVG in the /designs/ folder), category, and tags.
-  // Example: { id: 'mybee', name: 'Golden Bee', file: 'designs/golden-bee.svg', category: 'nature', tags: 'bee insect honey' }
   const DESIGNS = [
     { id: 'sunburst',   name: 'Sunburst',       file: 'designs/sunburst.svg',       category: 'geometric', tags: 'sun rays circle' },
     { id: 'honeybee',  name: 'Honey Bee',       file: 'designs/honeybee.svg',       category: 'nature',    tags: 'bee insect wings' },
@@ -1711,11 +1891,22 @@
     { id: 'wildtype',  name: 'Wild Type',       file: 'designs/wildtype.svg',       category: 'typography',tags: 'bold type letters font' },
   ];
 
+  // ——— STATE ———
   let selectedDesign = null;
   let activeFilter = 'all';
   let searchQuery = '';
+  let orderState = {
+    product: null,
+    price: 0,
+    color: 'Black',
+    size: null,
+    qty: 1,
+  };
 
-  // ——— RENDER GRID ———
+  // ——— PRICES ———
+  const PRICES = { 'T-Shirt': 20, 'Hoodie': 55, 'Sticker': 0.50 };
+
+  // ——— DESIGN GALLERY ———
   function renderGrid() {
     const grid = document.getElementById('designsGrid');
     const filtered = DESIGNS.filter(d => {
@@ -1723,12 +1914,10 @@
       const matchesSearch = !searchQuery || d.name.toLowerCase().includes(searchQuery) || d.tags.includes(searchQuery);
       return matchesFilter && matchesSearch;
     });
-
     if (filtered.length === 0) {
       grid.innerHTML = '<div class="no-designs-msg">No designs match your search. Try a different keyword or category.</div>';
       return;
     }
-
     grid.innerHTML = filtered.map(d => `
       <div class="design-thumb ${selectedDesign && selectedDesign.id === d.id ? 'selected' : ''}"
            data-id="${d.id}" onclick="selectDesign('${d.id}')">
@@ -1749,27 +1938,12 @@
     `).join('');
   }
 
-  // ——— SELECT DESIGN ———
   function selectDesign(id) {
     selectedDesign = DESIGNS.find(d => d.id === id);
     if (!selectedDesign) return;
-
-    // Update grid
     renderGrid();
-
-    // Update configurator canvas
-    const img = document.getElementById('canvasDesignImg');
-    const placeholder = document.getElementById('canvasPlaceholder');
-    const sparkle = document.querySelector('.canvas-sparkle');
-    const label = document.getElementById('canvasDesignLabel');
-    const nameEl = document.getElementById('canvasDesignName');
-
-    img.src = selectedDesign.file;
-    img.style.display = 'block';
-    placeholder.style.display = 'none';
-    if (sparkle) sparkle.style.display = 'none';
-    label.style.display = 'block';
-    nameEl.textContent = selectedDesign.name;
+    updateOrderBuilderDesign();
+    updateSummary();
 
     // Update selected bar
     const bar = document.getElementById('selectedBar');
@@ -1780,23 +1954,175 @@
     barName.textContent = selectedDesign.name;
   }
 
+  function updateOrderBuilderDesign() {
+    if (!selectedDesign) return;
+    const preview = document.getElementById('ob-design-preview');
+    const empty = document.getElementById('ob-design-empty');
+    const img = document.getElementById('ob-design-img');
+    const name = document.getElementById('ob-design-name');
+    preview.style.display = 'flex';
+    empty.style.display = 'none';
+    img.src = selectedDesign.file;
+    name.textContent = selectedDesign.name;
+  }
+
   function clearDesign() {
     selectedDesign = null;
-
-    const img = document.getElementById('canvasDesignImg');
-    const placeholder = document.getElementById('canvasPlaceholder');
-    const sparkle = document.querySelector('.canvas-sparkle');
-    const label = document.getElementById('canvasDesignLabel');
-
-    img.src = '';
-    img.style.display = 'none';
-    placeholder.style.display = 'block';
-    if (sparkle) sparkle.style.display = 'block';
-    label.style.display = 'none';
-
     document.getElementById('selectedBar').classList.remove('visible');
+    const preview = document.getElementById('ob-design-preview');
+    const empty = document.getElementById('ob-design-empty');
+    if (preview) { preview.style.display = 'none'; empty.style.display = 'block'; }
     renderGrid();
+    updateSummary();
   }
+
+  // ——— ORDER BUILDER LOGIC ———
+  function changeQty(delta) {
+    orderState.qty = Math.max(1, Math.min(99, orderState.qty + delta));
+    document.getElementById('ob-qty-display').textContent = orderState.qty;
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const isSticker = orderState.product === 'Sticker';
+
+    // Design
+    document.getElementById('sum-design').textContent = selectedDesign ? selectedDesign.name : '—';
+
+    // Product
+    document.getElementById('sum-product').textContent = orderState.product || '—';
+
+    // Color/size rows
+    const colorRow = document.getElementById('sum-color-row');
+    const sizeRow = document.getElementById('sum-size-row');
+    colorRow.style.display = isSticker ? 'none' : 'flex';
+    sizeRow.style.display = isSticker ? 'none' : 'flex';
+
+    document.getElementById('sum-color').textContent = orderState.color || '—';
+    document.getElementById('sum-size').textContent = orderState.size || '—';
+    document.getElementById('sum-qty').textContent = orderState.qty;
+
+    // Notes
+    const notes = document.getElementById('ob-notes').value.trim();
+    const notesRow = document.getElementById('sum-notes-row');
+    const notesEl = document.getElementById('sum-notes');
+    if (notes) { notesRow.style.display = 'flex'; notesEl.textContent = notes; }
+    else { notesRow.style.display = 'none'; }
+
+    // Total
+    const total = orderState.price * orderState.qty;
+    document.getElementById('sum-total').textContent = total > 0 ? '$' + total.toFixed(2) : '$—';
+  }
+
+  function buildOrderText() {
+    const isSticker = orderState.product === 'Sticker';
+    const total = (orderState.price * orderState.qty).toFixed(2);
+    const name = document.getElementById('ob-name').value.trim();
+    const email = document.getElementById('ob-email').value.trim();
+    const notes = document.getElementById('ob-notes').value.trim();
+    let text = 'ORDER: HoneyLight Creations\n';
+    text += 'Design: ' + (selectedDesign ? selectedDesign.name : 'N/A') + '\n';
+    text += 'Product: ' + (orderState.product || 'N/A') + '\n';
+    if (!isSticker) text += 'Color: ' + (orderState.color || 'N/A') + '\n';
+    if (!isSticker) text += 'Size: ' + (orderState.size || 'N/A') + '\n';
+    text += 'Qty: ' + orderState.qty + '\n';
+    text += 'Total: $' + total + '\n';
+    if (name) text += 'Name: ' + name + '\n';
+    if (email) text += 'Email: ' + email + '\n';
+    if (notes) text += 'Notes: ' + notes + '\n';
+    return text;
+  }
+
+  function validateOrder() {
+    const msgs = [];
+    const isSticker = orderState.product === 'Sticker';
+    if (!selectedDesign) msgs.push('Please select a design from the gallery above.');
+    if (!orderState.product) msgs.push('Please choose a product (T-Shirt, Hoodie, or Sticker).');
+    if (!isSticker && !orderState.size) msgs.push('Please select a size.');
+    const name = document.getElementById('ob-name').value.trim();
+    const email = document.getElementById('ob-email').value.trim();
+    if (!name) msgs.push('Please enter your name.');
+    if (!email || !email.includes('@')) msgs.push('Please enter a valid email address.');
+    return msgs;
+  }
+
+  function proceedToPayment() {
+    const errors = validateOrder();
+    const valEl = document.getElementById('ob-validation');
+    if (errors.length) {
+      valEl.style.display = 'block';
+      valEl.innerHTML = errors.map(e => '• ' + e).join('<br>');
+      valEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    valEl.style.display = 'none';
+
+    const orderText = buildOrderText();
+    const total = (orderState.price * orderState.qty).toFixed(2);
+
+    if (SQUARE_PAYMENT_LINK) {
+      // Try pre-filling Square note via URL parameter
+      const encoded = encodeURIComponent(orderText);
+      const url = SQUARE_PAYMENT_LINK + '?note=' + encoded + '&amount=' + Math.round(total * 100);
+      window.open(url, '_blank');
+      // Show fallback copy button in case URL param doesn't work
+      document.getElementById('ob-copy-btn').style.display = 'block';
+      document.getElementById('ob-copy-btn').textContent = '📋 Order details not showing in Square? Copy & paste them';
+    } else {
+      // No Square link yet — copy to clipboard as fallback
+      copyOrderDetails();
+      alert('Your Square payment link isn\'t set up yet.\n\nYour order details have been copied to your clipboard. Please paste them when you reach the payment page, or contact us directly.');
+    }
+  }
+
+  function copyOrderDetails() {
+    const text = buildOrderText();
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('ob-copy-btn');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.textContent = '📋 Copy order details'; }, 2500);
+    }).catch(() => {
+      prompt('Copy your order details:', buildOrderText());
+    });
+  }
+
+  // ——— PRODUCT RADIO BUTTONS ———
+  document.querySelectorAll('input[name="ob-product"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      orderState.product = radio.value;
+      orderState.price = PRICES[radio.value];
+      const isSticker = radio.value === 'Sticker';
+      document.getElementById('ob-color-row').style.display = isSticker ? 'none' : 'block';
+      document.getElementById('ob-size-row').style.display = isSticker ? 'none' : 'block';
+      document.getElementById('ob-qty-label').textContent = isSticker ? '③' : '⑤';
+      document.getElementById('ob-contact-label').textContent = isSticker ? '④' : '⑥';
+      if (isSticker) { orderState.size = 'N/A'; orderState.color = 'N/A'; }
+      updateSummary();
+    });
+  });
+
+  // ——— COLOR CHIPS ———
+  document.querySelectorAll('#ob-colors .ob-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#ob-colors .ob-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      orderState.color = chip.dataset.value;
+      updateSummary();
+    });
+  });
+
+  // ——— SIZE CHIPS ———
+  document.querySelectorAll('#ob-sizes .ob-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#ob-sizes .ob-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      orderState.size = chip.dataset.value;
+      updateSummary();
+    });
+  });
+
+  // ——— NOTES INPUT ———
+  document.getElementById('ob-notes').addEventListener('input', updateSummary);
 
   // ——— FILTER CHIPS ———
   document.getElementById('filterChips').addEventListener('click', e => {
@@ -1813,23 +2139,10 @@
     renderGrid();
   });
 
-  // ——— PRODUCT/COLOR/SIZE CHIPS ———
-  document.querySelectorAll('.options-row').forEach(row => {
-    row.querySelectorAll('.option-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        row.querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-      });
-    });
-  });
-
   // ——— SCROLL REVEAL ———
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-      }
+      if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
     });
   }, { threshold: 0.1 });
 
@@ -1842,6 +2155,7 @@
 
   // Init
   renderGrid();
+  updateSummary();
 </script>
 </body>
 </html>
