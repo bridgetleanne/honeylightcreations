@@ -290,12 +290,12 @@ async function handleUpload(e) {
 
     const [data] = await sbRes.json();
 
-    if (data.success) {
+    if (data) {
       showSuccess(`Design "${designName}" published successfully!`);
       resetUploadForm();
       loadDesigns();
     } else {
-      throw new Error(data.error || 'Upload failed');
+      throw new Error('Upload failed — no data returned from database');
     }
   } catch (error) {
     console.error('Upload error:', error);
