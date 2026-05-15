@@ -21,8 +21,6 @@ exports.handler = async (event) => {
     statusCode: 200,
     headers,
     body: JSON.stringify({
-      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-      uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
     }),
