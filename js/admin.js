@@ -106,6 +106,19 @@ async function handleLogin(e) {
   }
 }
 
+// Setup tag input event listener
+document.addEventListener('DOMContentLoaded', () => {
+  const tagInput = document.getElementById('new-tag-input');
+  if (tagInput) {
+    tagInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addCustomTag();
+      }
+    });
+  }
+});
+
 // Logout
 function logout() {
   authToken = null;
@@ -196,6 +209,20 @@ async function handleUpload(e) {
       },
       body: formData
     });
+
+    // Check if response is ok before parsing JSON
+    if (!response.ok) {
+      let errorMessage = 'Upload failed';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorMessage;
+      } catch (e) {
+        // If JSON parsing fails, try to get text
+        const errorText = await response.text();
+        errorMessage = errorText || `Server error: ${response.status}`;
+      }
+      throw new Error(errorMessage);
+    }
 
     const data = await response.json();
 
@@ -312,3 +339,51 @@ function escapeHtml(text) {
 }
 
 // Made with Bob
+// Add custom tag function
+function addCustomTag() {
+  const input = document.getElementById('new-tag-input');
+  const tagValue = input.value.trim().toLowerCase();
+  
+  if (!tagValue) {
+    return;
+  }
+  
+  // Sanitize tag value (remove special characters, replace spaces with hyphens)
+  const sanitizedTag = tagValue.replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+  
+  if (!sanitizedTag) {
+    showError('Please enter a valid tag name');
+    return;
+  }
+  
+  // Check if tag already exists
+  const existingTag = document.getElementById(`tag-${sanitizedTag}`);
+  if (existingTag) {
+    // Just check it if it exists
+    existingTag.checked = true;
+    input.value = '';
+    return;
+  }
+  
+  // Create new tag checkbox and label
+  const container = document.getElementById('tags-container');
+  const tagId = `tag-${sanitizedTag}`;
+  
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.id = tagId;
+  checkbox.className = 'tag-checkbox';
+  checkbox.value = sanitizedTag;
+  checkbox.checked = true; // Auto-check the new tag
+  
+  const label = document.createElement('label');
+  label.htmlFor = tagId;
+  label.className = 'tag-label';
+  label.textContent = sanitizedTag;
+  
+  container.appendChild(checkbox);
+  container.appendChild(label);
+  
+  // Clear input
+  input.value = '';
+}
