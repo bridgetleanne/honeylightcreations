@@ -250,30 +250,34 @@ async function handleUpload(e) {
 
     const cloudData = await cloudRes.json();
 
-    // Step 2: Save metadata to Supabase via Netlify function
+    // Step 2: Save metadata directly to Supabase
     publishBtn.innerHTML = '<span class="loading"></span> Saving design...';
-    const response = await fetch('/api/upload-design', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        name: designName,
-        tags,
-        available: true,
-        public_id: cloudData.public_id,
-        image_url: cloudData.secure_url,
-      }),
-    });
+    const sbRes = await fetch(
+      `${cloudinaryConfig.supabaseUrl}/rest/v1/HoneyLightUploads`,
+      {
+        method: 'POST',
+        headers: {
+          'apikey': cloudinaryConfig.supabaseAnonKey,
+          'Authorization': `Bearer ${cloudinaryConfig.supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({
+          name: designName,
+          tags,
+          available: true,
+          public_id: cloudData.public_id,
+          image_url: cloudData.secure_url,
+        }),
+      }
+    );
 
-    let data;
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Server error: ${response.status}`);
+    if (!sbRes.ok) {
+      const errorData = await sbRes.json().catch(() => ({}));
+      throw new Error(errorData.message || `Database error: ${sbRes.status}`);
     }
 
-    data = await response.json();
+    const [data] = await sbRes.json();
 
     if (data.success) {
       showSuccess(`Design "${designName}" published successfully!`);
