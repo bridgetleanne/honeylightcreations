@@ -88,7 +88,26 @@ exports.handler = async (event, context) => {
     }
 
     // Parse multipart form data
-    const { fields, files } = await parseMultipartForm(event);
+    let fields, files;
+    try {
+      const parsed = await parseMultipartForm(event);
+      fields = parsed.fields;
+      files = parsed.files;
+      console.log('Parsed form data:', {
+        fieldsKeys: Object.keys(fields || {}),
+        filesCount: files?.length || 0
+      });
+    } catch (parseError) {
+      console.error('Form parsing error:', parseError);
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          error: `Failed to parse form data: ${parseError.message}`,
+        }),
+      };
+    }
     
     if (!files || files.length === 0) {
       return {
@@ -103,7 +122,14 @@ exports.handler = async (event, context) => {
 
     const file = files[0];
     const designName = fields.name;
-    const tags = JSON.parse(fields.tags || '[]');
+    
+    let tags = [];
+    try {
+      tags = JSON.parse(fields.tags || '[]');
+    } catch (e) {
+      console.error('Tags parsing error:', e);
+      tags = [];
+    }
 
     // Validate inputs
     if (!designName) {
