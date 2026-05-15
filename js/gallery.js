@@ -23,7 +23,11 @@ async function fetchSquareProducts() {
 }
 
 // Show product selection modal for a design
-function showProductModal(designName, designImage) {
+function showProductModal(designId) {
+  const design = allDesigns.find(d => d.id === designId);
+  if (!design) return;
+  const designName = design.name;
+  const designImage = design.image_url;
   currentDesign = { name: designName, image: designImage };
   
   // Create modal if it doesn't exist
@@ -46,7 +50,7 @@ function showProductModal(designName, designImage) {
         <div class="modal-body" style="display: block; padding: 2rem; text-align: center;">
           <h2 class="modal-title">Order "${escapeHtml(designName)}"</h2>
           <div style="margin: 2rem 0;">
-            <img src="designs/${encodeURIComponent(designImage)}" alt="${escapeHtml(designName)}" style="max-width: 200px; border-radius: 8px;">
+            <img src="${designImage}" alt="${escapeHtml(designName)}" style="max-width: 200px; border-radius: 8px;">
           </div>
           <p style="color: var(--text-mid); margin-bottom: 1.5rem;">
             Products are currently being set up in our Square catalog. Please check back soon or contact us to place your order!
@@ -83,7 +87,7 @@ function showProductModal(designName, designImage) {
           <div class="modal-header">
             <h2 class="modal-title">Order "${escapeHtml(designName)}"</h2>
             <div class="design-preview">
-              <img src="designs/${encodeURIComponent(designImage)}" alt="${escapeHtml(designName)}">
+              <img src="${designImage}" alt="${escapeHtml(designName)}">
             </div>
             <p class="modal-subtitle">Choose a product to apply this design to:</p>
           </div>
@@ -274,8 +278,7 @@ async function proceedToCheckout(variationId, quantity) {
         quantity: quantity,
         design: {
           name: currentDesign.name,
-          file: currentDesign.image,
-          imageUrl: `${window.location.origin}/designs/${encodeURIComponent(currentDesign.image)}`
+          imageUrl: currentDesign.image,
         }
       }),
     });
@@ -329,12 +332,12 @@ function renderCard(design) {
   return `
     <div class="design-card" data-name="${design.name.toLowerCase()}" data-tags="${design.tags.join(' ')}">
       <div class="design-card-img">
-        <img src="designs/${encodeURIComponent(design.file)}" alt="${escapeHtml(design.name)}" loading="lazy" />
+        <img src="${design.image_url}" alt="${escapeHtml(design.name)}" loading="lazy" />
       </div>
       <div class="design-card-body">
         <div class="design-card-name">${escapeHtml(design.name)}</div>
         <div class="design-card-tags">${tags}</div>
-        <button class="btn btn-primary design-card-btn" onclick="showProductModal('${escapeHtml(design.name).replace(/'/g, "\\'")}', '${design.file}')">
+        <button class="btn btn-primary design-card-btn" onclick="showProductModal(${design.id})">
           Order This Design
         </button>
       </div>

@@ -10,9 +10,9 @@
 [functions]
   # Use esbuild for faster function bundling
   node_bundler = "esbuild"
-  
+
   # External node modules that should not be bundled
-  external_node_modules = ["@netlify/blobs"]
+  external_node_modules = ["@supabase/supabase-js"]
 
 # Redirect /api/* to serverless functions
 [[redirects]]

@@ -131,7 +131,7 @@
       grid.innerHTML = designs.slice(0, 8).map(d => `
           <div class="design-card">
             <div class="design-card-img">
-              <img src="designs/${encodeURIComponent(d.file)}" alt="${d.name}" loading="lazy" />
+              <img src="${d.image_url}" alt="${d.name}" loading="lazy" />
             </div>
             <div class="design-card-body">
               <div class="design-card-name">${d.name}</div>
