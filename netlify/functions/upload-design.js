@@ -129,15 +129,15 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Validate file size (5MB max)
-    const maxSize = 5 * 1024 * 1024;
+    // Validate file size (10MB max)
+    const maxSize = 10 * 1024 * 1024;
     if (file.content.length > maxSize) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
           success: false,
-          error: 'File size exceeds 5MB limit',
+          error: 'File size exceeds 10MB limit',
         }),
       };
     }
