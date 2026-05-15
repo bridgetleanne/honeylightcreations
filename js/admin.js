@@ -210,21 +210,35 @@ async function handleUpload(e) {
       body: formData
     });
 
-    // Check if response is ok before parsing JSON
+    // Parse response based on status
+    let data;
+    const contentType = response.headers.get('content-type');
+    
     if (!response.ok) {
       let errorMessage = 'Upload failed';
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.error || errorMessage;
-      } catch (e) {
-        // If JSON parsing fails, try to get text
-        const errorText = await response.text();
-        errorMessage = errorText || `Server error: ${response.status}`;
+      
+      // Try to get error message from response
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (e) {
+          errorMessage = `Server error: ${response.status}`;
+        }
+      } else {
+        try {
+          const errorText = await response.text();
+          errorMessage = errorText || `Server error: ${response.status}`;
+        } catch (e) {
+          errorMessage = `Server error: ${response.status}`;
+        }
       }
+      
       throw new Error(errorMessage);
     }
-
-    const data = await response.json();
+    
+    // Parse successful response
+    data = await response.json();
 
     if (data.success) {
       showSuccess(`Design "${designName}" published successfully!`);
