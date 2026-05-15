@@ -6,6 +6,7 @@ let activeTag = null;
 let searchQuery = '';
 let squareProducts = [];
 let currentDesign = null;
+let currentProduct = null;
 
 // Fetch Square products on page load
 async function fetchSquareProducts() {
@@ -14,6 +15,7 @@ async function fetchSquareProducts() {
     const data = await response.json();
     if (data.success) {
       squareProducts = data.products;
+      console.log(`Loaded ${squareProducts.length} products from Square`);
     }
   } catch (error) {
     console.error('Failed to fetch Square products:', error);
@@ -33,12 +35,12 @@ function showProductModal(designName, designImage) {
     document.body.appendChild(modal);
   }
 
-  // Filter products (you can customize this logic)
+  // Filter products that are in stock
   const availableProducts = squareProducts.filter(p => p.in_stock);
 
   if (availableProducts.length === 0) {
     modal.innerHTML = `
-      <div class="modal-overlay"></div>
+      <div class="modal-overlay" onclick="closeDesignModal()"></div>
       <div class="modal-content" style="max-width: 500px;">
         <button class="modal-close" onclick="closeDesignModal()">&times;</button>
         <div class="modal-body" style="display: block; padding: 2rem; text-align: center;">
@@ -55,9 +57,9 @@ function showProductModal(designName, designImage) {
     `;
   } else {
     const productsHTML = availableProducts.map(product => {
-      const imageHTML = product.image_url 
-        ? `<img src="${product.image_url}" alt="${escapeHtml(product.name)}">`
-        : '<div style="background: var(--pink-pale); padding: 2rem; text-align: center; color: var(--text-light);">📦</div>';
+      const imageHTML = product.image_url
+        ? `<img src="${product.image_url}" alt="${escapeHtml(product.name)}" loading="lazy">`
+        : '<div class="product-option-placeholder">📦<br><span>No image</span></div>';
       
       return `
         <div class="product-option-card" onclick="selectProduct('${product.id}')">
@@ -67,6 +69,7 @@ function showProductModal(designName, designImage) {
           <div class="product-option-info">
             <h4>${escapeHtml(product.name)}</h4>
             <p class="product-option-price">${product.price ? product.price.formatted : 'Price varies'}</p>
+            ${product.description ? `<p class="product-option-desc">${escapeHtml(product.description.substring(0, 60))}${product.description.length > 60 ? '...' : ''}</p>` : ''}
           </div>
         </div>
       `;
@@ -74,24 +77,22 @@ function showProductModal(designName, designImage) {
 
     modal.innerHTML = `
       <div class="modal-overlay" onclick="closeDesignModal()"></div>
-      <div class="modal-content" style="max-width: 700px;">
+      <div class="modal-content design-product-modal">
         <button class="modal-close" onclick="closeDesignModal()">&times;</button>
-        <div class="modal-body" style="display: block; padding: 2rem;">
-          <h2 class="modal-title" style="margin-bottom: 1rem;">Order "${escapeHtml(designName)}"</h2>
-          
-          <div style="margin-bottom: 2rem; text-align: center;">
-            <img src="designs/${encodeURIComponent(designImage)}" alt="${escapeHtml(designName)}" style="max-width: 200px; border-radius: 8px; box-shadow: var(--shadow);">
+        <div class="modal-body">
+          <div class="modal-header">
+            <h2 class="modal-title">Order "${escapeHtml(designName)}"</h2>
+            <div class="design-preview">
+              <img src="designs/${encodeURIComponent(designImage)}" alt="${escapeHtml(designName)}">
+            </div>
+            <p class="modal-subtitle">Choose a product to apply this design to:</p>
           </div>
-
-          <p style="color: var(--text-mid); margin-bottom: 1.5rem; text-align: center;">
-            Choose a product type to order with this design:
-          </p>
 
           <div class="product-options-grid">
             ${productsHTML}
           </div>
 
-          <p style="font-size: 0.85rem; color: var(--text-light); text-align: center; margin-top: 1.5rem;">
+          <p class="modal-footer-note">
             You'll be redirected to Square's secure checkout to complete your order.
           </p>
         </div>
@@ -111,36 +112,158 @@ function closeDesignModal() {
     document.body.style.overflow = '';
   }
   currentDesign = null;
+  currentProduct = null;
 }
 
-// Select a product and proceed to checkout
-async function selectProduct(productId) {
+// Select a product and show variations
+function selectProduct(productId) {
   if (!currentDesign) return;
 
   const product = squareProducts.find(p => p.id === productId);
   if (!product) return;
 
+  currentProduct = product;
+
+  // If product has multiple variations, show selection modal
+  if (product.variations && product.variations.length > 1) {
+    showVariationModal(product, currentDesign);
+  } else {
+    // Single variation - proceed directly to checkout
+    const variationId = product.variations && product.variations.length > 0
+      ? product.variations[0].id
+      : null;
+    
+    if (variationId) {
+      proceedToCheckout(variationId, 1);
+    } else {
+      showError('This product has no variations available. Please contact us.');
+    }
+  }
+}
+
+// Show variation selection modal
+function showVariationModal(product, design) {
+  const modal = document.getElementById('design-product-modal');
+  if (!modal) return;
+
+  // Sort variations by ordinal
+  const sortedVariations = [...product.variations].sort((a, b) => a.ordinal - b.ordinal);
+
+  const variationsHTML = sortedVariations.map(v => `
+    <option value="${v.id}" data-price="${v.price}">${escapeHtml(v.name)} - ${v.formatted_price}</option>
+  `).join('');
+
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeDesignModal()"></div>
+    <div class="modal-content variation-modal">
+      <button class="modal-close" onclick="closeDesignModal()">&times;</button>
+      <div class="modal-body">
+        <div class="modal-header">
+          <h2 class="modal-title">${escapeHtml(product.name)}</h2>
+          <p class="modal-subtitle">Design: "${escapeHtml(design.name)}"</p>
+        </div>
+
+        <div class="variation-form">
+          <div class="form-group">
+            <label for="variation-select">Select Option:</label>
+            <select id="variation-select" class="form-control">
+              ${variationsHTML}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="quantity-input">Quantity:</label>
+            <div class="quantity-control">
+              <button type="button" class="qty-btn" onclick="adjustQuantity(-1)">−</button>
+              <input type="number" id="quantity-input" class="form-control" value="1" min="1" max="10">
+              <button type="button" class="qty-btn" onclick="adjustQuantity(1)">+</button>
+            </div>
+          </div>
+
+          <div class="price-summary">
+            <span>Total:</span>
+            <span id="total-price" class="price-amount">${product.variations[0].formatted_price}</span>
+          </div>
+
+          <button class="btn btn-primary btn-block" onclick="confirmCheckout()">
+            Proceed to Checkout
+          </button>
+
+          <p class="modal-footer-note">
+            You'll be redirected to Square's secure checkout to complete your purchase.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.classList.add('active');
+
+  // Add event listener to update price when variation changes
+  const variationSelect = document.getElementById('variation-select');
+  const quantityInput = document.getElementById('quantity-input');
+  
+  if (variationSelect && quantityInput) {
+    const updatePrice = () => {
+      const selectedOption = variationSelect.options[variationSelect.selectedIndex];
+      const price = parseInt(selectedOption.dataset.price);
+      const quantity = parseInt(quantityInput.value);
+      const total = price * quantity;
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(total / 100);
+      document.getElementById('total-price').textContent = formatted;
+    };
+
+    variationSelect.addEventListener('change', updatePrice);
+    quantityInput.addEventListener('input', updatePrice);
+  }
+}
+
+// Adjust quantity
+function adjustQuantity(delta) {
+  const input = document.getElementById('quantity-input');
+  if (!input) return;
+  
+  const current = parseInt(input.value) || 1;
+  const newValue = Math.max(1, Math.min(10, current + delta));
+  input.value = newValue;
+  
+  // Trigger input event to update price
+  input.dispatchEvent(new Event('input'));
+}
+
+// Confirm checkout from variation modal
+function confirmCheckout() {
+  const variationSelect = document.getElementById('variation-select');
+  const quantityInput = document.getElementById('quantity-input');
+  
+  if (!variationSelect || !quantityInput) return;
+  
+  const variationId = variationSelect.value;
+  const quantity = parseInt(quantityInput.value) || 1;
+  
+  proceedToCheckout(variationId, quantity);
+}
+
+// Proceed to checkout with design metadata
+async function proceedToCheckout(variationId, quantity) {
+  if (!currentDesign) return;
+
   // Show loading state
   const modal = document.getElementById('design-product-modal');
   const modalBody = modal.querySelector('.modal-body');
   modalBody.innerHTML = `
-    <div style="text-align: center; padding: 3rem;">
+    <div class="loading-state">
       <div class="spinner"></div>
-      <p style="margin-top: 1rem; color: var(--text-mid);">Creating your order...</p>
+      <p>Creating your order...</p>
+      <p class="loading-subtext">Please wait while we prepare your checkout...</p>
     </div>
   `;
 
   try {
-    // Get the first variation (or let user select if multiple)
-    const variationId = product.variations && product.variations.length > 0 
-      ? product.variations[0].id 
-      : null;
-
-    if (!variationId) {
-      throw new Error('Product has no variations available');
-    }
-
-    // Create checkout with design name in notes
+    // Create checkout with design metadata
     const response = await fetch('/api/square-checkout', {
       method: 'POST',
       headers: {
@@ -148,8 +271,12 @@ async function selectProduct(productId) {
       },
       body: JSON.stringify({
         variation_id: variationId,
-        quantity: 1,
-        note: `Design: ${currentDesign.name}`,
+        quantity: quantity,
+        design: {
+          name: currentDesign.name,
+          file: currentDesign.image,
+          imageUrl: `${window.location.origin}/designs/${encodeURIComponent(currentDesign.image)}`
+        }
       }),
     });
 
@@ -164,17 +291,29 @@ async function selectProduct(productId) {
 
   } catch (error) {
     console.error('Checkout error:', error);
-    modalBody.innerHTML = `
-      <div style="text-align: center; padding: 2rem;">
-        <p style="color: var(--pink-deep); margin-bottom: 1rem;">❌ Error creating checkout</p>
-        <p style="color: var(--text-mid); margin-bottom: 1.5rem;">${escapeHtml(error.message)}</p>
-        <button class="btn btn-primary" onclick="closeDesignModal()">Close</button>
-        <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 1rem;">
-          Please try again or <a href="about.html#contact">contact us</a> for assistance.
-        </p>
-      </div>
-    `;
+    showError(error.message);
   }
+}
+
+// Show error message
+function showError(message) {
+  const modal = document.getElementById('design-product-modal');
+  if (!modal) return;
+
+  const modalBody = modal.querySelector('.modal-body');
+  if (!modalBody) return;
+
+  modalBody.innerHTML = `
+    <div class="error-state">
+      <div class="error-icon">❌</div>
+      <h3>Error Creating Checkout</h3>
+      <p class="error-message">${escapeHtml(message)}</p>
+      <button class="btn btn-primary" onclick="closeDesignModal()">Close</button>
+      <p class="error-help">
+        Please try again or <a href="about.html#contact">contact us</a> for assistance.
+      </p>
+    </div>
+  `;
 }
 
 // Escape HTML to prevent XSS
@@ -258,7 +397,7 @@ function init() {
     searchQuery = searchInput.value.toLowerCase().trim();
   }
 
-  fetch('catalog.json')
+  fetch('/api/get-catalog')
     .then(r => r.json())
     .then(data => {
       allDesigns = data;

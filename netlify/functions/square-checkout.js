@@ -60,7 +60,7 @@ exports.handler = async (event, context) => {
 
     // Parse request body
     const body = JSON.parse(event.body || '{}');
-    const { item_id, variation_id, quantity = 1, note = '' } = body;
+    const { item_id, variation_id, quantity = 1, note = '', design } = body;
 
     // Validate required fields
     if (!variation_id) {
@@ -78,6 +78,26 @@ exports.handler = async (event, context) => {
     const client = getSquareClient();
     const { checkoutApi } = client;
 
+    // Format design information for order notes
+    let orderNote = note;
+    if (design && design.name) {
+      orderNote = `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📐 DESIGN INFORMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Design Name: ${design.name}
+Design File: ${design.file || 'N/A'}
+
+🔗 VIEW & DOWNLOAD DESIGN:
+${design.imageUrl || 'N/A'}
+
+💡 Click the link above to view the full-size
+design image for printing.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      `.trim();
+    }
+
     // Create checkout request
     const checkoutRequest = {
       idempotencyKey: `${variation_id}-${Date.now()}`,
@@ -87,7 +107,7 @@ exports.handler = async (event, context) => {
           {
             catalogObjectId: variation_id,
             quantity: quantity.toString(),
-            note: note || undefined,
+            note: orderNote || undefined,
           },
         ],
       },
@@ -102,6 +122,15 @@ exports.handler = async (event, context) => {
 
     if (!response.result.paymentLink) {
       throw new Error('Failed to create payment link');
+    }
+
+    // Log design info for debugging (optional)
+    if (design) {
+      console.log('Order created with design:', {
+        name: design.name,
+        file: design.file,
+        orderId: response.result.paymentLink.orderId
+      });
     }
 
     return {

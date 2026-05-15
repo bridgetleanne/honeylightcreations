@@ -17,7 +17,8 @@
   "author": "HoneyLight Creations",
   "license": "ISC",
   "dependencies": {
-    "square": "^35.0.0"
+    "square": "^35.0.0",
+    "@netlify/blobs": "^7.0.0"
   },
   "devDependencies": {
     "@netlify/functions": "^2.0.0"

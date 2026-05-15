@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Design Manager | HoneyLight Creations</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Admin-specific styles */
+    .admin-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1.25rem;
+    }
+
+    .admin-header {
+      text-align: center;
+      padding: 2rem 0;
+      border-bottom: 2px solid var(--pink-pale);
+      margin-bottom: 2rem;
+    }
+
+    .admin-header h1 {
+      font-size: 2rem;
+      color: var(--pink-deep);
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-header p {
+      color: var(--text-mid);
+    }
+
+    /* Login Form */
+    .login-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      max-width: 400px;
+      margin: 4rem auto;
+    }
+
+    .login-card h2 {
+      text-align: center;
+      color: var(--pink-deep);
+      margin-bottom: 1.5rem;
+    }
+
+    .login-form .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .login-form label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--pink-pale);
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .login-form input:focus {
+      outline: none;
+      border-color: var(--pink-mid);
+    }
+
+    .login-error {
+      background: #fee;
+      color: #c33;
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    /* Upload Section */
+    .upload-section {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .upload-section h2 {
+      color: var(--pink-deep);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .upload-zone {
+      border: 3px dashed var(--pink-pale);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      background: var(--pink-pale);
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--pink-mid);
+      background: var(--pink-light);
+    }
+
+    .upload-zone.dragover {
+      border-color: var(--pink-deep);
+      background: var(--pink-light);
+      transform: scale(1.02);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .upload-zone p {
+      color: var(--text-mid);
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-zone small {
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+
+    #file-input {
+      display: none;
+    }
+
+    /* Preview */
+    .preview-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: var(--pink-pale);
+      border-radius: var(--radius-sm);
+      display: none;
+    }
+
+    .preview-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+
+    .preview-image {
+      max-width: 300px;
+      max-height: 300px;
+      margin: 0 auto 1rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+    }
+
+    .file-info {
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      text-align: center;
+    }
+
+    /* Tags */
+    .tags-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag-checkbox {
+      display: none;
+    }
+
+    .tag-label {
+      padding: 0.5rem 1rem;
+      background: var(--white);
+      border: 2px solid var(--pink-pale);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .tag-checkbox:checked + .tag-label {
+      background: var(--pink-deep);
+      color: var(--white);
+      border-color: var(--pink-deep);
+    }
+
+    .tag-label:hover {
+      border-color: var(--pink-mid);
+    }
+
+    /* Success/Error Messages */
+    .message {
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    /* Design List */
+    .designs-list {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .designs-list h2 {
+      color: var(--pink-deep);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .design-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid var(--pink-pale);
+    }
+
+    .design-item:last-child {
+      border-bottom: none;
+    }
+
+    .design-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .design-thumb {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      background: var(--pink-pale);
+    }
+
+    .design-details h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .design-tags {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .design-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-small {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+    }
+
+    /* Loading Spinner */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--pink-pale);
+      border-top-color: var(--pink-deep);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Hidden */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="login-screen">
+  <div class="login-card">
+    <h2>🔐 Admin Login</h2>
+    <div class="login-error" id="login-error"></div>
+    <form class="login-form" id="login-form">
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- Admin Dashboard -->
+<div id="admin-dashboard" class="hidden">
+  <div class="admin-container">
+    
+    <div class="admin-header">
+      <h1>🎨 Design Manager</h1>
+      <p>Upload and manage your design gallery</p>
+      <button class="btn btn-outline btn-small" onclick="logout()" style="margin-top: 1rem;">Logout</button>
+    </div>
+
+    <!-- Messages -->
+    <div class="message success" id="success-message"></div>
+    <div class="message error" id="error-message"></div>
+
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <h2>📤 Upload New Design</h2>
+      
+      <div class="upload-zone" id="upload-zone">
+        <div class="upload-icon">🎨</div>
+        <p><strong>Drag & Drop your design here</strong></p>
+        <p>or click to browse</p>
+        <small>Supports: SVG, PNG (Max 5MB)</small>
+      </div>
+      
+      <input type="file" id="file-input" accept=".svg,.png,image/svg+xml,image/png" />
+
+      <!-- Preview -->
+      <div class="preview-section" id="preview-section">
+        <h3>Preview</h3>
+        <img id="preview-image" class="preview-image" alt="Design preview" />
+        <div class="file-info" id="file-info"></div>
+      </div>
+
+      <!-- Design Details Form -->
+      <form id="upload-form" class="hidden">
+        <div class="form-group">
+          <label for="design-name">Design Name *</label>
+          <input type="text" id="design-name" class="form-control" required placeholder="e.g., Book Worm" />
+        </div>
+
+        <div class="form-group">
+          <label>Tags</label>
+          <div class="tags-group">
+            <input type="checkbox" id="tag-books" class="tag-checkbox" value="books" />
+            <label for="tag-books" class="tag-label">books</label>
+
+            <input type="checkbox" id="tag-humor" class="tag-checkbox" value="humor" />
+            <label for="tag-humor" class="tag-label">humor</label>
+
+            <input type="checkbox" id="tag-anti-social" class="tag-checkbox" value="anti-social" />
+            <label for="tag-anti-social" class="tag-label">anti-social</label>
+
+            <input type="checkbox" id="tag-holidays" class="tag-checkbox" value="holidays" />
+            <label for="tag-holidays" class="tag-label">holidays</label>
+
+            <input type="checkbox" id="tag-audiobooks" class="tag-checkbox" value="audiobooks" />
+            <label for="tag-audiobooks" class="tag-label">audiobooks</label>
+
+            <input type="checkbox" id="tag-dark-romance" class="tag-checkbox" value="dark-romance" />
+            <label for="tag-dark-romance" class="tag-label">dark-romance</label>
+
+            <input type="checkbox" id="tag-animals" class="tag-checkbox" value="animals" />
+            <label for="tag-animals" class="tag-label">animals</label>
+
+            <input type="checkbox" id="tag-fairy" class="tag-checkbox" value="fairy" />
+            <label for="tag-fairy" class="tag-label">fairy</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="publish-btn">
+          Publish Design
+        </button>
+      </form>
+    </div>
+
+    <!-- Existing Designs -->
+    <div class="designs-list">
+      <h2>📋 Existing Designs</h2>
+      <div id="designs-container">
+        <p style="text-align: center; color: var(--text-light);">Loading designs...</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+
+</body>
+</html>
