@@ -247,7 +247,7 @@ async function handleUpload(e) {
       {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${uploadConfig.supabaseAnonKey}`,
+          'Authorization': `Bearer ${uploadConfig.supabaseServiceKey}`,
           'Content-Type': selectedFile.type,
         },
         body: selectedFile,
@@ -256,7 +256,7 @@ async function handleUpload(e) {
 
     if (!storageRes.ok) {
       const err = await storageRes.json().catch(() => ({}));
-      throw new Error(`Image upload failed: ${err.error || storageRes.statusText}`);
+      throw new Error(`Image upload failed (${storageRes.status}): ${err.error || err.message || storageRes.statusText}`);
     }
 
     const imageUrl = `${uploadConfig.supabaseUrl}/storage/v1/object/public/designs/${fileName}`;
