@@ -128,8 +128,7 @@
     .then(r => r.json())
     .then(designs => {
       const grid = document.getElementById('featured-grid');
-      designs.slice(0, 8).forEach(d => {
-        grid.innerHTML += `
+      grid.innerHTML = designs.slice(0, 8).map(d => `
           <div class="design-card">
             <div class="design-card-img">
               <img src="designs/${encodeURIComponent(d.file)}" alt="${d.name}" loading="lazy" />
@@ -139,8 +138,7 @@
               <div class="design-card-tags">${d.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
               <a href="designs.html?design=${encodeURIComponent(d.name)}" class="btn btn-primary design-card-btn">Order This Design</a>
             </div>
-          </div>`;
-      });
+          </div>`).join('');
     })
     .catch(() => {
       document.getElementById('featured-grid').innerHTML = '<p style="text-align:center;color:var(--text-light);grid-column:1/-1">Browse our designs on the Designs page!</p>';
