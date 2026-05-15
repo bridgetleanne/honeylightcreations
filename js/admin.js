@@ -7,7 +7,7 @@
 let authToken = null;
 let selectedFile = null;
 let selectedFileDataUrl = null;
-let cloudinaryConfig = null;
+let uploadConfig = null;
 let allDesigns = [];
 
 // Initialize
@@ -44,7 +44,7 @@ async function showDashboard() {
     const res = await fetch('/api/get-upload-config', {
       headers: { 'Authorization': `Bearer ${authToken}` },
     });
-    cloudinaryConfig = await res.json();
+    uploadConfig = await res.json();
   } catch (e) {
     console.error('Failed to load upload config:', e);
   }
@@ -227,38 +227,49 @@ async function handleUpload(e) {
   publishBtn.innerHTML = '<span class="loading"></span> Publishing...';
 
   try {
-    if (!cloudinaryConfig?.cloudName || !cloudinaryConfig?.uploadPreset) {
+    if (!uploadConfig?.supabaseUrl || !uploadConfig?.supabaseAnonKey) {
       throw new Error('Upload configuration not loaded. Please refresh and try again.');
     }
 
-    // Step 1: Upload file directly to Cloudinary from the browser
+    // Step 1: Upload file directly to Supabase Storage
     publishBtn.innerHTML = '<span class="loading"></span> Uploading image...';
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-    formData.append('upload_preset', cloudinaryConfig.uploadPreset);
-    formData.append('folder', 'honeylightcreations/designs');
+    const ext = selectedFile.name.split('.').pop().toLowerCase();
+    const safeName = selectedFile.name
+      .replace(/\.[^.]+$/, '')
+      .replace(/[^a-zA-Z0-9]/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+      .toLowerCase();
+    const fileName = `${safeName}-${Date.now()}.${ext}`;
 
-    const cloudRes = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`,
-      { method: 'POST', body: formData }
+    const storageRes = await fetch(
+      `${uploadConfig.supabaseUrl}/storage/v1/object/designs/${fileName}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${uploadConfig.supabaseAnonKey}`,
+          'Content-Type': selectedFile.type,
+        },
+        body: selectedFile,
+      }
     );
 
-    if (!cloudRes.ok) {
-      const err = await cloudRes.json().catch(() => ({}));
-      throw new Error(`Image upload failed: ${err.error?.message || cloudRes.statusText}`);
+    if (!storageRes.ok) {
+      const err = await storageRes.json().catch(() => ({}));
+      throw new Error(`Image upload failed: ${err.error || storageRes.statusText}`);
     }
 
-    const cloudData = await cloudRes.json();
+    const imageUrl = `${uploadConfig.supabaseUrl}/storage/v1/object/public/designs/${fileName}`;
 
     // Step 2: Save metadata directly to Supabase
     publishBtn.innerHTML = '<span class="loading"></span> Saving design...';
     const sbRes = await fetch(
-      `${cloudinaryConfig.supabaseUrl}/rest/v1/HoneyLightUploads`,
+      `${uploadConfig.supabaseUrl}/rest/v1/HoneyLightUploads`,
       {
         method: 'POST',
         headers: {
-          'apikey': cloudinaryConfig.supabaseAnonKey,
-          'Authorization': `Bearer ${cloudinaryConfig.supabaseAnonKey}`,
+          'apikey': uploadConfig.supabaseAnonKey,
+          'Authorization': `Bearer ${uploadConfig.supabaseAnonKey}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation',
         },
@@ -266,8 +277,8 @@ async function handleUpload(e) {
           name: designName,
           tags,
           available: true,
-          public_id: cloudData.public_id,
-          image_url: cloudData.secure_url,
+          public_id: `designs/${fileName}`,
+          image_url: imageUrl,
         }),
       }
     );
