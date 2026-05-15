@@ -146,17 +146,36 @@ exports.handler = async (event, context) => {
     const sanitizedFilename = sanitizeFilename(file.filename);
 
     // Get Netlify Blob stores
-    const designsStore = getStore('designs');
-    const catalogStore = getStore('catalog');
+    let designsStore, catalogStore;
+    try {
+      designsStore = getStore({
+        name: 'designs',
+        siteID: process.env.SITE_ID || context.siteId,
+        token: process.env.NETLIFY_TOKEN || context.token,
+      });
+      catalogStore = getStore({
+        name: 'catalog',
+        siteID: process.env.SITE_ID || context.siteId,
+        token: process.env.NETLIFY_TOKEN || context.token,
+      });
+    } catch (error) {
+      console.error('Error initializing Blob stores:', error);
+      throw new Error('Failed to initialize storage. Please contact support.');
+    }
 
     // Save file to Blob Storage
-    await designsStore.set(sanitizedFilename, file.content, {
-      metadata: {
-        contentType: file.type,
-        originalName: file.filename,
-        uploadDate: new Date().toISOString(),
-      }
-    });
+    try {
+      await designsStore.set(sanitizedFilename, file.content, {
+        metadata: {
+          contentType: file.type,
+          originalName: file.filename,
+          uploadDate: new Date().toISOString(),
+        }
+      });
+    } catch (error) {
+      console.error('Error saving file to Blob storage:', error);
+      throw new Error(`Failed to save file: ${error.message}`);
+    }
 
     // Create design entry
     const designEntry = {
@@ -183,12 +202,17 @@ exports.handler = async (event, context) => {
     catalog.push(designEntry);
 
     // Save updated catalog
-    await catalogStore.set('catalog.json', JSON.stringify(catalog, null, 2), {
-      metadata: {
-        contentType: 'application/json',
-        lastUpdated: new Date().toISOString(),
-      }
-    });
+    try {
+      await catalogStore.set('catalog.json', JSON.stringify(catalog, null, 2), {
+        metadata: {
+          contentType: 'application/json',
+          lastUpdated: new Date().toISOString(),
+        }
+      });
+    } catch (error) {
+      console.error('Error saving catalog:', error);
+      throw new Error(`Failed to update catalog: ${error.message}`);
+    }
 
     console.log(`Design uploaded successfully: ${sanitizedFilename}`);
 
