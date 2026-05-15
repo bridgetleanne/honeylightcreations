@@ -62,11 +62,17 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Get admin password from environment variable
-    const adminPassword = process.env.ADMIN_PASSWORD;
+    // TEMPORARY: Hardcoded password for testing
+    // TODO: Remove this and use environment variable once working
+    const HARDCODED_PASSWORD = 'uW[.ScPY3QG+wVf;';
+    
+    // Get admin password from environment variable (fallback to hardcoded for testing)
+    const adminPassword = process.env.ADMIN_PASSWORD || HARDCODED_PASSWORD;
     
     console.log('Auth attempt - Password provided:', !!password);
-    console.log('Auth attempt - ADMIN_PASSWORD configured:', !!adminPassword);
+    console.log('Auth attempt - Password length:', password?.length);
+    console.log('Auth attempt - ADMIN_PASSWORD configured:', !!process.env.ADMIN_PASSWORD);
+    console.log('Auth attempt - Using hardcoded fallback:', !process.env.ADMIN_PASSWORD);
     
     if (!adminPassword) {
       console.error('ADMIN_PASSWORD environment variable not set');
@@ -84,6 +90,7 @@ exports.handler = async (event, context) => {
     // In production, you'd want to use bcrypt or similar
     const passwordMatch = password === adminPassword;
     console.log('Password match:', passwordMatch);
+    console.log('Expected password length:', adminPassword.length);
     
     if (passwordMatch) {
       // Generate session token
