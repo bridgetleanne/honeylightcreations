@@ -21,48 +21,17 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { fileDataUrl, name, tags = [], available = true } = JSON.parse(event.body || '{}');
+    const { name, tags = [], available = true, public_id, image_url } = JSON.parse(event.body || '{}');
 
-    if (!fileDataUrl || !name) {
+    if (!name || !public_id || !image_url) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ success: false, error: 'fileDataUrl and name are required' }),
+        body: JSON.stringify({ success: false, error: 'name, public_id, and image_url are required' }),
       };
     }
 
-    const mimeMatch = fileDataUrl.match(/^data:([^;]+);base64,/);
-    if (!mimeMatch || !['image/png', 'image/svg+xml'].includes(mimeMatch[1])) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ success: false, error: 'Only PNG and SVG files are allowed' }),
-      };
-    }
-
-    // Upload to Cloudinary via unsigned upload preset
-    const cloudRes = await fetch(
-      `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          file: fileDataUrl,
-          upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
-          folder: 'honeylightcreations/designs',
-        }),
-      }
-    );
-
-    if (!cloudRes.ok) {
-      const err = await cloudRes.json().catch(() => ({}));
-      throw new Error(`Cloudinary upload failed: ${err.error?.message || cloudRes.statusText}`);
-    }
-
-    const cloudData = await cloudRes.json();
-
-    // Save metadata to Supabase via REST API
-    const sbRes = await fetch(
+    const res = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/HoneyLightUploads`,
       {
         method: 'POST',
@@ -72,27 +41,21 @@ exports.handler = async (event) => {
           'Content-Type': 'application/json',
           'Prefer': 'return=representation',
         },
-        body: JSON.stringify({
-          name,
-          tags,
-          available,
-          public_id: cloudData.public_id,
-          image_url: cloudData.secure_url,
-        }),
+        body: JSON.stringify({ name, tags, available, public_id, image_url }),
       }
     );
 
-    if (!sbRes.ok) {
-      const err = await sbRes.json().catch(() => ({}));
-      throw new Error(`Database error: ${err.message || sbRes.statusText}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(`Database error: ${err.message || res.statusText}`);
     }
 
-    const [design] = await sbRes.json();
+    const [design] = await res.json();
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ success: true, message: 'Design uploaded successfully', design }),
+      body: JSON.stringify({ success: true, message: 'Design saved successfully', design }),
     };
   } catch (error) {
     console.error('Upload error:', error);
