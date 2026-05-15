@@ -81,14 +81,32 @@ async function handleLogin(e) {
   const password = document.getElementById('password').value;
   const errorDiv = document.getElementById('login-error');
   
+  console.log('Login attempt starting...');
+  console.log('Password length:', password.length);
+  
   try {
+    console.log('Sending request to /api/admin-auth');
     const response = await fetch('/api/admin-auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password })
     });
 
-    const data = await response.json();
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+    
+    const responseText = await response.text();
+    console.log('Response text:', responseText);
+    
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('Failed to parse response as JSON:', parseError);
+      throw new Error('Invalid response from server');
+    }
+
+    console.log('Parsed data:', data);
 
     if (data.success) {
       authToken = data.token;
@@ -96,12 +114,12 @@ async function handleLogin(e) {
       showDashboard();
       loadDesigns();
     } else {
-      errorDiv.textContent = 'Invalid password. Please try again.';
+      errorDiv.textContent = data.error || 'Invalid password. Please try again.';
       errorDiv.style.display = 'block';
     }
   } catch (error) {
     console.error('Login error:', error);
-    errorDiv.textContent = 'Login failed. Please try again.';
+    errorDiv.textContent = `Login failed: ${error.message}`;
     errorDiv.style.display = 'block';
   }
 }
