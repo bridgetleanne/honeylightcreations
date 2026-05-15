@@ -65,21 +65,27 @@ exports.handler = async (event, context) => {
     // Get admin password from environment variable
     const adminPassword = process.env.ADMIN_PASSWORD;
     
+    console.log('Auth attempt - Password provided:', !!password);
+    console.log('Auth attempt - ADMIN_PASSWORD configured:', !!adminPassword);
+    
     if (!adminPassword) {
-      console.error('ADMIN_PASSWORD not configured');
+      console.error('ADMIN_PASSWORD environment variable not set');
       return {
         statusCode: 500,
         headers,
         body: JSON.stringify({
           success: false,
-          error: 'Admin authentication not configured',
+          error: 'Admin authentication not configured. Please set ADMIN_PASSWORD in Netlify environment variables.',
         }),
       };
     }
 
     // Compare passwords (simple comparison for now)
     // In production, you'd want to use bcrypt or similar
-    if (password === adminPassword) {
+    const passwordMatch = password === adminPassword;
+    console.log('Password match:', passwordMatch);
+    
+    if (passwordMatch) {
       // Generate session token
       const token = generateToken();
       
