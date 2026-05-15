@@ -3,9 +3,19 @@
  * Handles SVG/PNG uploads, saves to Netlify Blobs, and updates catalog
  */
 
-const { getStore } = require('@netlify/blobs');
 const { parseMultipartForm } = require('@netlify/functions');
 const path = require('path');
+
+// Try to load Netlify Blobs, but handle if it's not available
+let getStore;
+try {
+  const blobsModule = require('@netlify/blobs');
+  getStore = blobsModule.getStore;
+  console.log('Netlify Blobs loaded successfully');
+} catch (error) {
+  console.error('Failed to load @netlify/blobs:', error.message);
+  getStore = null;
+}
 
 // Validate file type
 function isValidFileType(filename) {
@@ -171,6 +181,20 @@ exports.handler = async (event, context) => {
     // Sanitize filename
     const sanitizedFilename = sanitizeFilename(file.filename);
 
+    // Check if Netlify Blobs is available
+    if (!getStore) {
+      console.error('Netlify Blobs not available');
+      return {
+        statusCode: 503,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          error: 'File storage not configured. Please contact administrator.',
+          details: '@netlify/blobs package not available'
+        }),
+      };
+    }
+
     // Get Netlify Blob stores
     let designsStore, catalogStore;
     try {
@@ -184,9 +208,18 @@ exports.handler = async (event, context) => {
         siteID: process.env.SITE_ID || context.siteId,
         token: process.env.NETLIFY_TOKEN || context.token,
       });
+      console.log('Blob stores initialized successfully');
     } catch (error) {
       console.error('Error initializing Blob stores:', error);
-      throw new Error('Failed to initialize storage. Please contact support.');
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          error: 'Failed to initialize storage',
+          details: error.message
+        }),
+      };
     }
 
     // Save file to Blob Storage
