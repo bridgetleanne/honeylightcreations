@@ -5,14 +5,8 @@
 
 const crypto = require('crypto');
 
-// Simple JWT-like token generation
 function generateToken() {
   return crypto.randomBytes(32).toString('hex');
-}
-
-// Hash password for comparison
-function hashPassword(password) {
-  return crypto.createHash('sha256').update(password).digest('hex');
 }
 
 // Main handler
@@ -65,11 +59,6 @@ exports.handler = async (event, context) => {
     // Get admin password from environment variable
     const adminPassword = process.env.ADMIN_PASSWORD;
     
-    console.log('Auth attempt - Password provided:', !!password);
-    console.log('Auth attempt - Password length:', password?.length);
-    console.log('Auth attempt - ADMIN_PASSWORD configured:', !!adminPassword);
-    console.log('Auth attempt - ADMIN_PASSWORD length:', adminPassword?.length);
-    
     if (!adminPassword) {
       console.error('ADMIN_PASSWORD environment variable not set');
       return {
@@ -82,12 +71,8 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Compare passwords (simple comparison for now)
-    // In production, you'd want to use bcrypt or similar
     const passwordMatch = password === adminPassword;
-    console.log('Password match:', passwordMatch);
-    console.log('Expected password length:', adminPassword.length);
-    
+
     if (passwordMatch) {
       // Generate session token
       const token = generateToken();

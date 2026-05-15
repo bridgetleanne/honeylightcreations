@@ -206,16 +206,8 @@ exports.handler = async (event, context) => {
     // Get Netlify Blob stores
     let designsStore, catalogStore;
     try {
-      designsStore = getStore({
-        name: 'designs',
-        siteID: process.env.SITE_ID || context.siteId,
-        token: process.env.NETLIFY_TOKEN || context.token,
-      });
-      catalogStore = getStore({
-        name: 'catalog',
-        siteID: process.env.SITE_ID || context.siteId,
-        token: process.env.NETLIFY_TOKEN || context.token,
-      });
+      designsStore = getStore('designs');
+      catalogStore = getStore('catalog');
       console.log('Blob stores initialized successfully');
     } catch (error) {
       console.error('Error initializing Blob stores:', error);
