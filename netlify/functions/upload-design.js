@@ -1,5 +1,3 @@
-const { createClient } = require('@supabase/supabase-js');
-
 function verifyAuth(event) {
   const authHeader = event.headers.authorization || event.headers.Authorization;
   return authHeader?.startsWith('Bearer ') && authHeader.substring(7).length > 0;
@@ -42,7 +40,7 @@ exports.handler = async (event) => {
       };
     }
 
-    // Upload to Cloudinary (unsigned upload via preset)
+    // Upload to Cloudinary via unsigned upload preset
     const cloudRes = await fetch(
       `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
       {
@@ -63,27 +61,38 @@ exports.handler = async (event) => {
 
     const cloudData = await cloudRes.json();
 
-    // Save metadata to Supabase
-    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+    // Save metadata to Supabase via REST API
+    const sbRes = await fetch(
+      `${process.env.SUPABASE_URL}/rest/v1/HoneyLightUploads`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
+          'apikey': process.env.SUPABASE_SERVICE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({
+          name,
+          tags,
+          available,
+          public_id: cloudData.public_id,
+          image_url: cloudData.secure_url,
+        }),
+      }
+    );
 
-    const { data, error } = await supabase
-      .from('HoneyLightUploads')
-      .insert({
-        name,
-        tags,
-        available,
-        public_id: cloudData.public_id,
-        image_url: cloudData.secure_url,
-      })
-      .select()
-      .single();
+    if (!sbRes.ok) {
+      const err = await sbRes.json().catch(() => ({}));
+      throw new Error(`Database error: ${err.message || sbRes.statusText}`);
+    }
 
-    if (error) throw new Error(`Database error: ${error.message}`);
+    const [design] = await sbRes.json();
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ success: true, message: 'Design uploaded successfully', design: data }),
+      body: JSON.stringify({ success: true, message: 'Design uploaded successfully', design }),
     };
   } catch (error) {
     console.error('Upload error:', error);

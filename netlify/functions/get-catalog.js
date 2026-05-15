@@ -1,5 +1,3 @@
-const { createClient } = require('@supabase/supabase-js');
-
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -14,15 +12,19 @@ exports.handler = async (event) => {
   }
 
   try {
-    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+    const res = await fetch(
+      `${process.env.SUPABASE_URL}/rest/v1/HoneyLightUploads?available=eq.true&order=created_at.desc`,
+      {
+        headers: {
+          'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
+          'apikey': process.env.SUPABASE_SERVICE_KEY,
+        },
+      }
+    );
 
-    const { data, error } = await supabase
-      .from('HoneyLightUploads')
-      .select('*')
-      .eq('available', true)
-      .order('created_at', { ascending: false });
+    if (!res.ok) throw new Error(`Supabase error: ${res.statusText}`);
 
-    if (error) throw new Error(error.message);
+    const data = await res.json();
 
     return {
       statusCode: 200,

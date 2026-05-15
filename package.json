@@ -17,7 +17,6 @@
   "author": "HoneyLight Creations",
   "license": "ISC",
   "dependencies": {
-    "square": "^35.0.0",
-    "@supabase/supabase-js": "^2.0.0"
+    "square": "^35.0.0"
   }
 }
