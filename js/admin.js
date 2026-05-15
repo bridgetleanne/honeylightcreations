@@ -6,6 +6,7 @@
 // State
 let authToken = null;
 let selectedFile = null;
+let selectedFileDataUrl = null;
 let allDesigns = [];
 
 // Initialize
@@ -166,11 +167,13 @@ function handleFileSelect(file) {
   // Show preview
   const reader = new FileReader();
   reader.onload = (e) => {
+    selectedFileDataUrl = e.target.result;
+
     const previewSection = document.getElementById('preview-section');
     const previewImage = document.getElementById('preview-image');
     const fileInfo = document.getElementById('file-info');
 
-    previewImage.src = e.target.result;
+    previewImage.src = selectedFileDataUrl;
     fileInfo.textContent = `${file.name} (${formatFileSize(file.size)})`;
     previewSection.style.display = 'block';
 
@@ -189,7 +192,7 @@ function handleFileSelect(file) {
 async function handleUpload(e) {
   e.preventDefault();
 
-  if (!selectedFile) {
+  if (!selectedFile || !selectedFileDataUrl) {
     showError('Please select a file first.');
     return;
   }
@@ -213,19 +216,18 @@ async function handleUpload(e) {
   publishBtn.innerHTML = '<span class="loading"></span> Publishing...';
 
   try {
-    // Create form data
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-    formData.append('name', designName);
-    formData.append('tags', JSON.stringify(tags));
-
-    // Upload file
     const response = await fetch('/api/upload-design', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${authToken}`
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
       },
-      body: formData
+      body: JSON.stringify({
+        fileDataUrl: selectedFileDataUrl,
+        name: designName,
+        tags,
+        available: true,
+      }),
     });
 
     // Parse response based on status
@@ -277,6 +279,7 @@ async function handleUpload(e) {
 // Reset upload form
 function resetUploadForm() {
   selectedFile = null;
+  selectedFileDataUrl = null;
   document.getElementById('file-input').value = '';
   document.getElementById('design-name').value = '';
   document.querySelectorAll('.tag-checkbox').forEach(cb => cb.checked = false);
@@ -298,16 +301,16 @@ async function loadDesigns() {
     }
 
     container.innerHTML = allDesigns.map(design => `
-      <div class="design-item" data-file="${escapeHtml(design.file)}">
+      <div class="design-item" data-id="${design.id}">
         <div class="design-info">
-          <img src="designs/${encodeURIComponent(design.file)}" alt="${escapeHtml(design.name)}" class="design-thumb" />
+          <img src="${design.image_url}" alt="${escapeHtml(design.name)}" class="design-thumb" />
           <div class="design-details">
             <h4>${escapeHtml(design.name)}</h4>
             <div class="design-tags">${design.tags.map(t => `#${t}`).join(' ')}</div>
           </div>
         </div>
         <div class="design-actions">
-          <button class="btn btn-outline btn-small" onclick="toggleDesignVisibility('${escapeHtml(design.file)}')">
+          <button class="btn btn-outline btn-small" onclick="toggleDesignVisibility(${design.id})">
             ${design.available !== false ? 'Hide' : 'Show'}
           </button>
         </div>

@@ -1,86 +1,40 @@
-/**
- * Netlify Function: Get Design Catalog
- * Serves catalog.json from Netlify Blob Storage
- * Falls back to static catalog.json if Blob Storage is empty
- */
+const { createClient } = require('@supabase/supabase-js');
 
-const { getStore } = require('@netlify/blobs');
-const fs = require('fs').promises;
-const path = require('path');
-
-exports.handler = async (event, context) => {
-  // Set CORS headers
+exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Content-Type': 'application/json',
-    'Cache-Control': 'public, max-age=60', // Cache for 1 minute
+    'Cache-Control': 'public, max-age=60',
   };
 
-  // Handle preflight requests
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers,
-      body: '',
-    };
-  }
-
-  // Only allow GET requests
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
   if (event.httpMethod !== 'GET') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ 
-        success: false, 
-        error: 'Method not allowed',
-      }),
-    };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
   try {
-    // Try to get catalog from Blob Storage first
-    const catalogStore = getStore('catalog');
-    let catalog = null;
+    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
-    try {
-      catalog = await catalogStore.get('catalog.json', { type: 'json' });
-    } catch (blobError) {
-      console.log('Catalog not found in Blob Storage, using static file');
-    }
+    const { data, error } = await supabase
+      .from('HoneyLightUploads')
+      .select('*')
+      .eq('available', true)
+      .order('created_at', { ascending: false });
 
-    // If no catalog in Blob Storage, fall back to static catalog.json
-    if (!catalog || catalog.length === 0) {
-      try {
-        const staticCatalogPath = path.join(process.cwd(), 'catalog.json');
-        const staticCatalog = await fs.readFile(staticCatalogPath, 'utf-8');
-        catalog = JSON.parse(staticCatalog);
-        console.log('Using static catalog.json');
-      } catch (staticError) {
-        console.error('Failed to read static catalog:', staticError);
-        catalog = [];
-      }
-    }
+    if (error) throw new Error(error.message);
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(catalog),
+      body: JSON.stringify(data),
     };
-
   } catch (error) {
     console.error('Catalog fetch error:', error);
-
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({
-        success: false,
-        error: 'Failed to fetch catalog',
-      }),
+      body: JSON.stringify([]),
     };
   }
 };
-
-// Made with Bob
