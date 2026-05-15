@@ -4,3 +4,18 @@ designs/SVG Prints-20260419T212350Z-3-002/
 
 # Claude settings
 .claude/
+
+# Environment variables (contains sensitive API keys)
+.env
+.env.local
+
+# Node modules
+node_modules/
+
+# Netlify functions build artifacts
+netlify/functions/node_modules/
+.netlify/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <script src="js/square-catalog.js" defer></script>
 </head>
 <body>
 
@@ -42,53 +43,57 @@
 <main class="shop-section">
   <div class="container">
 
-    <div class="shop-grid">
+    <!-- Square Catalog Section -->
+    <section class="catalog-section" style="padding-top:0;">
+      <h2 class="section-title">Shop Our Catalog</h2>
+      <p class="section-subtitle">Browse our collection of stickers, shirts, and more!</p>
 
-      <!-- Stickers Card -->
+      <!-- Category Filters -->
+      <div class="catalog-filters">
+        <button class="catalog-filter-btn active" data-category="all">All Products</button>
+        <button class="catalog-filter-btn" data-category="stickers">Stickers</button>
+        <button class="catalog-filter-btn" data-category="shirts">Shirts</button>
+      </div>
+
+      <!-- Loading State -->
+      <div class="catalog-loading" id="catalog-loading">
+        <div class="spinner"></div>
+        <p>Loading products from Square...</p>
+      </div>
+
+      <!-- Error State -->
+      <div class="catalog-error" id="catalog-error" style="display:none;">
+        <p class="error-message">Unable to load products. Please try again.</p>
+        <button class="btn btn-primary" id="catalog-retry-btn">Retry</button>
+        <p style="font-size:0.85rem;margin-top:1rem;color:var(--text-light);">
+          If the problem persists, please <a href="about.html#contact">contact us</a>.
+        </p>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="catalog-grid" id="catalog-grid" style="display:none;">
+        <!-- Products will be dynamically loaded here -->
+      </div>
+    </section>
+
+    <!-- Info Cards -->
+    <div class="shop-grid" style="margin-top:3rem;">
+
+      <!-- Stickers Info Card -->
       <div class="shop-card">
         <div class="shop-card-icon">🌸</div>
-        <h3>Stickers</h3>
+        <h3>About Our Stickers</h3>
         <p>
           Cute. Affordable. Collectible.<br />
           Mix and match from our ever-growing library of book-lover designs.
           Perfect for laptops, water bottles, journals, and more.
         </p>
         <p style="font-size:0.9rem;color:var(--text-light);">
-          2 inch × 2 inch · In stock &amp; future orders accepted
+          2 inch × 2 inch · High-quality vinyl · Waterproof
         </p>
-
-        <!--
-          ══════════════════════════════════════════════════════════
-          SQUARE STICKER BUY BUTTON
-          ══════════════════════════════════════════════════════════
-          Replace the placeholder below with the embed code from
-          your Square Dashboard:
-            Payments → Payment Links → [your sticker link] → Share → Embed
-
-          It will look something like:
-            <script src="https://square-checkout.example.com/..."></script>
-            <div id="sq-checkout-..."></div>
-
-          DELETE this comment block once you've added the real embed.
-          ══════════════════════════════════════════════════════════
-        -->
-        <div style="width:100%">
-          <a
-            href="#square-setup"
-            class="btn btn-primary"
-            style="width:100%;display:block;text-align:center;"
-            id="sticker-btn"
-          >
-            Buy Stickers
-          </a>
-          <p class="square-notice" id="square-notice">
-            ⚙️ <strong>Setup needed:</strong> Paste your Square sticker payment link embed code above this notice.
-            See the <a href="README.md">README</a> for step-by-step instructions.
-          </p>
-        </div>
       </div>
 
-      <!-- Custom Shirts Card -->
+      <!-- Custom Shirts Info Card -->
       <div class="shop-card">
         <div class="shop-card-icon">👕</div>
         <h3>Custom T-Shirts</h3>
@@ -97,24 +102,25 @@
           Any design, any color, any size.
         </p>
         <p style="font-size:0.9rem;color:var(--text-light);">
-          Made-to-order · Future orders accepted · $20 flat rate
+          Made-to-order · Any design from our gallery
         </p>
-        <a href="designs.html" class="btn btn-primary" style="width:100%;display:block;text-align:center;">
-          Browse Designs →
+        <a href="designs.html" class="btn btn-outline" style="width:100%;display:block;text-align:center;">
+          Browse Design Gallery →
         </a>
       </div>
 
     </div>
 
-    <!-- Shirts payment info -->
+    <!-- How It Works -->
     <div style="margin-top:3rem;background:var(--pink-pale);border-radius:var(--radius);padding:2rem;text-align:center;border:1px solid rgba(182,33,90,0.12)">
-      <h2 style="font-size:1.3rem;color:var(--pink-deep);margin-bottom:0.5rem;">✦ How Shirt Orders Work ✦</h2>
-      <p style="color:var(--text-mid);max-width:540px;margin:0 auto 1rem;">
-        Browse the design gallery, click <strong>"Order This Design"</strong>, and you'll be taken to our
-        secure Square checkout. Enter your shirt color, size, and any special notes right in the order form.
-        We'll get to work and reach out with updates!
+      <h2 style="font-size:1.3rem;color:var(--pink-deep);margin-bottom:0.5rem;">✦ How Ordering Works ✦</h2>
+      <p style="color:var(--text-mid);max-width:600px;margin:0 auto 1rem;">
+        Browse our catalog above, click on any product to see details, then click <strong>"Buy Now"</strong> 
+        to be redirected to Square's secure checkout. All orders are processed through Square for your security.
       </p>
-      <a href="designs.html" class="btn btn-outline">Browse the Gallery</a>
+      <p style="font-size:0.9rem;color:var(--text-light);margin-top:1rem;">
+        Questions? <a href="about.html#contact" style="color:var(--pink-deep);font-weight:700;">Contact us</a> — we're here to help!
+      </p>
     </div>
 
   </div>

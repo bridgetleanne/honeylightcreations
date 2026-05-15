@@ -1,0 +1,31 @@
+# Netlify Configuration for HoneyLight Creations
+
+[build]
+  # Directory where serverless functions are located
+  functions = "netlify/functions"
+  
+  # Directory to publish (root for static site)
+  publish = "."
+
+[functions]
+  # Use esbuild for faster function bundling
+  node_bundler = "esbuild"
+
+# Redirect /api/* to serverless functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Redirect for successful orders
+[[redirects]]
+  from = "/shop.html?order=success"
+  to = "/shop.html"
+  status = 200
+  force = false
+
+# Environment variables (set these in Netlify Dashboard)
+# SQUARE_ACCESS_TOKEN - Your Square API access token
+# SQUARE_APPLICATION_ID - Your Square application ID
+# SQUARE_LOCATION_ID - Your Square location ID
+# SQUARE_ENVIRONMENT - "sandbox" or "production"

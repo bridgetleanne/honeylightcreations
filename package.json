@@ -1,0 +1,25 @@
+{
+  "name": "honeylight-creations",
+  "version": "1.0.0",
+  "description": "HoneyLight Creations - Custom Shirts, Stickers, Prints & More",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'Static site - no build needed'",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [
+    "stickers",
+    "custom-shirts",
+    "book-lover",
+    "designs"
+  ],
+  "author": "HoneyLight Creations",
+  "license": "ISC",
+  "dependencies": {
+    "square": "^35.0.0"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^2.0.0"
+  }
+}
