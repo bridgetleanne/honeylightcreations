@@ -7,14 +7,16 @@ const { parseMultipartForm } = require('@netlify/functions');
 const path = require('path');
 
 // Try to load Netlify Blobs, but handle if it's not available
-let getStore;
+let getStore, connectLambda;
 try {
   const blobsModule = require('@netlify/blobs');
   getStore = blobsModule.getStore;
+  connectLambda = blobsModule.connectLambda;
   console.log('Netlify Blobs loaded successfully');
 } catch (error) {
   console.error('Failed to load @netlify/blobs:', error.message);
   getStore = null;
+  connectLambda = null;
 }
 
 // Validate file type
@@ -85,6 +87,12 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    // Connect to Netlify Blobs (required for Lambda compatibility)
+    if (connectLambda) {
+      connectLambda(event);
+      console.log('Connected to Netlify Blobs');
+    }
+
     // Verify authentication
     if (!verifyAuth(event)) {
       return {
