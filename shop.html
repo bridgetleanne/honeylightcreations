@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — HoneyLight Creations</title>
+  <meta name="description" content="Shop stickers and more from HoneyLight Creations. Cute, affordable, collectible book-lover stickers." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────────── -->
+<nav class="site-nav" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      HoneyLight <em style="font-style:italic;color:var(--pink-light);">Creations</em>
+      <span>Custom Shirts · Stickers · Prints & More</span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="designs.html">Designs</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a href="designs.html" class="btn btn-gold nav-cta">Browse Designs</a>
+  </div>
+</nav>
+
+<!-- ── Page Hero ───────────────────────────────────────────────── -->
+<section class="page-hero">
+  <h1>Shop</h1>
+  <p>Stickers, shirts, and more — cute, affordable, and made for book lovers.</p>
+</section>
+
+<!-- ── Shop Section ────────────────────────────────────────────── -->
+<main class="shop-section">
+  <div class="container">
+
+    <div class="shop-grid">
+
+      <!-- Stickers Card -->
+      <div class="shop-card">
+        <div class="shop-card-icon">🌸</div>
+        <h3>Stickers</h3>
+        <p>
+          Cute. Affordable. Collectible.<br />
+          Mix and match from our ever-growing library of book-lover designs.
+          Perfect for laptops, water bottles, journals, and more.
+        </p>
+        <p style="font-size:0.9rem;color:var(--text-light);">
+          2 inch × 2 inch · In stock &amp; future orders accepted
+        </p>
+
+        <!--
+          ══════════════════════════════════════════════════════════
+          SQUARE STICKER BUY BUTTON
+          ══════════════════════════════════════════════════════════
+          Replace the placeholder below with the embed code from
+          your Square Dashboard:
+            Payments → Payment Links → [your sticker link] → Share → Embed
+
+          It will look something like:
+            <script src="https://square-checkout.example.com/..."></script>
+            <div id="sq-checkout-..."></div>
+
+          DELETE this comment block once you've added the real embed.
+          ══════════════════════════════════════════════════════════
+        -->
+        <div style="width:100%">
+          <a
+            href="#square-setup"
+            class="btn btn-primary"
+            style="width:100%;display:block;text-align:center;"
+            id="sticker-btn"
+          >
+            Buy Stickers
+          </a>
+          <p class="square-notice" id="square-notice">
+            ⚙️ <strong>Setup needed:</strong> Paste your Square sticker payment link embed code above this notice.
+            See the <a href="README.md">README</a> for step-by-step instructions.
+          </p>
+        </div>
+      </div>
+
+      <!-- Custom Shirts Card -->
+      <div class="shop-card">
+        <div class="shop-card-icon">👕</div>
+        <h3>Custom T-Shirts</h3>
+        <p>
+          You pick the design from our gallery — we print it just for you.
+          Any design, any color, any size.
+        </p>
+        <p style="font-size:0.9rem;color:var(--text-light);">
+          Made-to-order · Future orders accepted · $20 flat rate
+        </p>
+        <a href="designs.html" class="btn btn-primary" style="width:100%;display:block;text-align:center;">
+          Browse Designs →
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Shirts payment info -->
+    <div style="margin-top:3rem;background:var(--pink-pale);border-radius:var(--radius);padding:2rem;text-align:center;border:1px solid rgba(182,33,90,0.12)">
+      <h2 style="font-size:1.3rem;color:var(--pink-deep);margin-bottom:0.5rem;">✦ How Shirt Orders Work ✦</h2>
+      <p style="color:var(--text-mid);max-width:540px;margin:0 auto 1rem;">
+        Browse the design gallery, click <strong>"Order This Design"</strong>, and you'll be taken to our
+        secure Square checkout. Enter your shirt color, size, and any special notes right in the order form.
+        We'll get to work and reach out with updates!
+      </p>
+      <a href="designs.html" class="btn btn-outline">Browse the Gallery</a>
+    </div>
+
+  </div>
+</main>
+
+<!-- ── Footer ──────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">HoneyLight <em style="font-style:italic">Creations</em></div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="designs.html">Designs</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <p class="footer-copy">© 2026 HoneyLight Creations. Thank you for supporting small business! 💗</p>
+  </div>
+</footer>
+
+</body>
+</html>

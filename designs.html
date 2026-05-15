@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Designs — HoneyLight Creations</title>
+  <meta name="description" content="Browse all book-lover custom shirt designs from HoneyLight Creations. Pick your favorite and order your custom shirt today!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────────── -->
+<nav class="site-nav" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      HoneyLight <em style="font-style:italic;color:var(--pink-light);">Creations</em>
+      <span>Custom Shirts · Stickers · Prints & More</span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="designs.html" class="active">Designs</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a href="shop.html" class="btn btn-gold nav-cta">Shop Stickers</a>
+  </div>
+</nav>
+
+<!-- ── Page Hero ───────────────────────────────────────────────── -->
+<section class="page-hero">
+  <h1>Browse All Designs</h1>
+  <p>Find your perfect book-lover design — then order your custom shirt for just $20 flat!</p>
+</section>
+
+<!-- ── Gallery ─────────────────────────────────────────────────── -->
+<main class="gallery-page">
+  <div class="container">
+
+    <div class="gallery-controls">
+      <div class="search-wrap">
+        <input type="search" id="search-input" placeholder="Search designs…" autocomplete="off" />
+      </div>
+      <div class="filter-tags" id="filter-tags"></div>
+    </div>
+
+    <p style="color:var(--text-light);font-size:0.9rem;margin-bottom:1.25rem;">
+      Showing <strong id="design-count">…</strong> &nbsp;·&nbsp;
+      <span style="color:var(--gold);font-weight:700;">$20 flat rate per shirt</span>
+    </p>
+
+    <div class="gallery-grid" id="gallery-grid">
+      <div class="gallery-empty">Loading designs…</div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ── How to Order Banner ─────────────────────────────────────── -->
+<section style="background:var(--pink-pale);padding:3rem 1.25rem;text-align:center;border-top:1px solid rgba(182,33,90,0.1)">
+  <div class="container">
+    <h2 class="section-title">How to Order a Shirt</h2>
+    <div class="divider">✦ ✦ ✦</div>
+    <p style="max-width:520px;margin:0 auto 1.5rem;color:var(--text-mid);">
+      Click <strong>"Order This Design"</strong> on any design to be taken to our secure checkout.
+      You'll enter your design choice, shirt color, size, and any special notes right in the checkout form.
+    </p>
+    <p style="color:var(--text-light);font-size:0.9rem;">
+      Don't see a design you love? <a href="about.html#contact">Contact us</a> — we accept custom orders!
+    </p>
+  </div>
+</section>
+
+<!-- ── Footer ──────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">HoneyLight <em style="font-style:italic">Creations</em></div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="designs.html">Designs</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <p class="footer-copy">© 2026 HoneyLight Creations. Thank you for supporting small business! 💗</p>
+  </div>
+</footer>
+
+<script src="js/gallery.js"></script>
+</body>
+</html>
