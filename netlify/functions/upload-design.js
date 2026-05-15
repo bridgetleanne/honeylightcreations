@@ -1,5 +1,3 @@
-const { createClient } = require('@supabase/supabase-js');
-
 function verifyAuth(event) {
   const authHeader = event.headers.authorization || event.headers.Authorization;
   return authHeader?.startsWith('Bearer ') && authHeader.substring(7).length > 0;
@@ -23,67 +21,41 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { fileDataUrl, name, tags = [], available = true } = JSON.parse(event.body || '{}');
+    const { name, tags = [], available = true, public_id, image_url } = JSON.parse(event.body || '{}');
 
-    if (!fileDataUrl || !name) {
+    if (!name || !public_id || !image_url) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ success: false, error: 'fileDataUrl and name are required' }),
+        body: JSON.stringify({ success: false, error: 'name, public_id, and image_url are required' }),
       };
     }
 
-    const mimeMatch = fileDataUrl.match(/^data:([^;]+);base64,/);
-    if (!mimeMatch || !['image/png', 'image/svg+xml'].includes(mimeMatch[1])) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ success: false, error: 'Only PNG and SVG files are allowed' }),
-      };
-    }
-
-    // Upload to Cloudinary (unsigned upload via preset)
-    const cloudRes = await fetch(
-      `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
+    const res = await fetch(
+      `${process.env.SUPABASE_URL}/rest/v1/HoneyLightUploads`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          file: fileDataUrl,
-          upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
-          folder: 'honeylightcreations/designs',
-        }),
+        headers: {
+          'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
+          'apikey': process.env.SUPABASE_SERVICE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({ name, tags, available, public_id, image_url }),
       }
     );
 
-    if (!cloudRes.ok) {
-      const err = await cloudRes.json().catch(() => ({}));
-      throw new Error(`Cloudinary upload failed: ${err.error?.message || cloudRes.statusText}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(`Database error: ${err.message || res.statusText}`);
     }
 
-    const cloudData = await cloudRes.json();
-
-    // Save metadata to Supabase
-    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-
-    const { data, error } = await supabase
-      .from('HoneyLightUploads')
-      .insert({
-        name,
-        tags,
-        available,
-        public_id: cloudData.public_id,
-        image_url: cloudData.secure_url,
-      })
-      .select()
-      .single();
-
-    if (error) throw new Error(`Database error: ${error.message}`);
+    const [design] = await res.json();
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ success: true, message: 'Design uploaded successfully', design: data }),
+      body: JSON.stringify({ success: true, message: 'Design saved successfully', design }),
     };
   } catch (error) {
     console.error('Upload error:', error);

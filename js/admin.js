@@ -7,6 +7,7 @@
 let authToken = null;
 let selectedFile = null;
 let selectedFileDataUrl = null;
+let cloudinaryConfig = null;
 let allDesigns = [];
 
 // Initialize
@@ -34,9 +35,19 @@ function showLogin() {
 }
 
 // Show dashboard
-function showDashboard() {
+async function showDashboard() {
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('admin-dashboard').classList.remove('hidden');
+
+  // Fetch Cloudinary config (credentials stay server-side)
+  try {
+    const res = await fetch('/api/get-upload-config', {
+      headers: { 'Authorization': `Bearer ${authToken}` },
+    });
+    cloudinaryConfig = await res.json();
+  } catch (e) {
+    console.error('Failed to load upload config:', e);
+  }
 }
 
 // Setup event listeners
@@ -216,49 +227,57 @@ async function handleUpload(e) {
   publishBtn.innerHTML = '<span class="loading"></span> Publishing...';
 
   try {
-    const response = await fetch('/api/upload-design', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        fileDataUrl: selectedFileDataUrl,
-        name: designName,
-        tags,
-        available: true,
-      }),
-    });
-
-    // Parse response based on status
-    let data;
-    const contentType = response.headers.get('content-type');
-    
-    if (!response.ok) {
-      let errorMessage = 'Upload failed';
-      
-      // Try to get error message from response
-      if (contentType && contentType.includes('application/json')) {
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorMessage;
-        } catch (e) {
-          errorMessage = `Server error: ${response.status}`;
-        }
-      } else {
-        try {
-          const errorText = await response.text();
-          errorMessage = errorText || `Server error: ${response.status}`;
-        } catch (e) {
-          errorMessage = `Server error: ${response.status}`;
-        }
-      }
-      
-      throw new Error(errorMessage);
+    if (!cloudinaryConfig?.cloudName || !cloudinaryConfig?.uploadPreset) {
+      throw new Error('Upload configuration not loaded. Please refresh and try again.');
     }
-    
-    // Parse successful response
-    data = await response.json();
+
+    // Step 1: Upload file directly to Cloudinary from the browser
+    publishBtn.innerHTML = '<span class="loading"></span> Uploading image...';
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('upload_preset', cloudinaryConfig.uploadPreset);
+    formData.append('folder', 'honeylightcreations/designs');
+
+    const cloudRes = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`,
+      { method: 'POST', body: formData }
+    );
+
+    if (!cloudRes.ok) {
+      const err = await cloudRes.json().catch(() => ({}));
+      throw new Error(`Image upload failed: ${err.error?.message || cloudRes.statusText}`);
+    }
+
+    const cloudData = await cloudRes.json();
+
+    // Step 2: Save metadata directly to Supabase
+    publishBtn.innerHTML = '<span class="loading"></span> Saving design...';
+    const sbRes = await fetch(
+      `${cloudinaryConfig.supabaseUrl}/rest/v1/HoneyLightUploads`,
+      {
+        method: 'POST',
+        headers: {
+          'apikey': cloudinaryConfig.supabaseAnonKey,
+          'Authorization': `Bearer ${cloudinaryConfig.supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({
+          name: designName,
+          tags,
+          available: true,
+          public_id: cloudData.public_id,
+          image_url: cloudData.secure_url,
+        }),
+      }
+    );
+
+    if (!sbRes.ok) {
+      const errorData = await sbRes.json().catch(() => ({}));
+      throw new Error(errorData.message || `Database error: ${sbRes.status}`);
+    }
+
+    const [data] = await sbRes.json();
 
     if (data.success) {
       showSuccess(`Design "${designName}" published successfully!`);
