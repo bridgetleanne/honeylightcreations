@@ -330,13 +330,15 @@ async function loadDesigns() {
       return;
     }
 
-    container.innerHTML = allDesigns.map(design => `
+    container.innerHTML = allDesigns.map(design => {
+      const tags = Array.isArray(design.tags) ? design.tags : JSON.parse(design.tags || '[]');
+      return `
       <div class="design-item" data-id="${design.id}">
         <div class="design-info">
           <img src="${design.image_url}" alt="${escapeHtml(design.name)}" class="design-thumb" />
           <div class="design-details">
             <h4>${escapeHtml(design.name)}</h4>
-            <div class="design-tags">${design.tags.map(t => `#${t}`).join(' ')}</div>
+            <div class="design-tags">${tags.map(t => `#${t}`).join(' ')}</div>
           </div>
         </div>
         <div class="design-actions">
@@ -345,7 +347,8 @@ async function loadDesigns() {
           </button>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
   } catch (error) {
     console.error('Failed to load designs:', error);
     container.innerHTML = '<p style="text-align: center; color: var(--text-light);">Failed to load designs.</p>';
