@@ -560,22 +560,87 @@ h1, h2, h3, h4 {
   line-height: 1.75;
 }
 
-.contact-grid {
+.contact-form-wrap {
+  max-width: 640px;
+  margin: 2.5rem auto 0;
+}
+
+.contact-form-intro {
+  color: var(--text-mid);
+  margin-bottom: 1.75rem;
+  line-height: 1.7;
+}
+
+.contact-form-intro a {
+  color: var(--pink-deep);
+  font-weight: 700;
+}
+
+.contact-form .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-top: 3rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
-.contact-card {
-  background: var(--pink-pale);
-  border-radius: var(--radius);
-  padding: 1.5rem;
+
+.contact-form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.1rem;
+}
+
+.contact-form label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.4rem;
+}
+
+.contact-form .required {
+  color: var(--pink-deep);
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  border: 1.5px solid rgba(182,33,90,0.2);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-dark);
+  background: var(--white);
+  transition: border-color 0.2s;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--pink-deep);
+}
+
+.contact-form textarea {
+  resize: vertical;
+}
+
+.contact-submit-btn {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.contact-form-success {
+  margin-top: 1rem;
   text-align: center;
+  color: var(--pink-deep);
+  font-weight: 700;
+  font-size: 1rem;
 }
-.contact-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
-.contact-card h4 { color: var(--pink-deep); margin-bottom: 0.3rem; font-size: 1rem; }
-.contact-card p { font-size: 0.9rem; color: var(--text-mid); }
-.contact-card a { color: var(--pink-deep); font-weight: 700; }
+
+@media (max-width: 540px) {
+  .contact-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ── Footer ───────────────────────────────────────────────────── */
 .site-footer {
