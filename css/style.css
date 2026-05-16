@@ -1038,6 +1038,98 @@ h1, h2, h3, h4 {
   margin-top: 0.5rem;
 }
 
+/* ── Design Picker (Shop Modal) ───────────────────────────────────── */
+.modal-design-picker {
+  margin-bottom: 1rem;
+}
+
+.design-picker-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.6rem;
+}
+
+.design-picker-required {
+  color: var(--pink-deep);
+}
+
+.design-thumb-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0.25rem;
+  border: 1px solid rgba(182,33,90,0.15);
+  border-radius: var(--radius-sm);
+  background: var(--pink-pale);
+}
+
+.design-thumb-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  width: 80px;
+  background: var(--white);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 0.3rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+
+.design-thumb-btn:hover {
+  border-color: var(--pink-mid);
+}
+
+.design-thumb-btn.selected {
+  border-color: var(--pink-deep);
+  box-shadow: 0 0 0 2px rgba(182,33,90,0.2);
+}
+
+.design-thumb-btn img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.design-thumb-name {
+  font-size: 0.6rem;
+  color: var(--text-mid);
+  text-align: center;
+  line-height: 1.2;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-width: 72px;
+}
+
+.design-picker-selected {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--pink-deep);
+  font-weight: 600;
+}
+
+@keyframes pickerShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+.picker-shake {
+  animation: pickerShake 0.5s ease;
+  border-color: var(--pink-deep) !important;
+}
+
 /* ── Responsive: Modal ────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .modal-body {
