@@ -458,11 +458,24 @@ async function saveRename(id) {
       throw new Error(err.message || `Update failed (${res.status})`);
     }
 
+    // Update local state
     const design = allDesigns.find(d => d.id === id);
     if (design) design.name = newName;
 
+    // Update DOM directly — avoids refetching cached catalog
+    const item = document.querySelector(`.design-item[data-id="${id}"]`);
+    input.outerHTML = `<h4 class="design-name-label">${escapeHtml(newName)}</h4>`;
+
+    const actionsDiv = item.querySelector('.design-actions');
+    actionsDiv.innerHTML = `
+      <button class="btn btn-outline btn-small" onclick="toggleDesignVisibility(${id})">
+        ${design?.available !== false ? 'Hide' : 'Show'}
+      </button>
+      <button class="btn btn-outline btn-small" onclick="startRename(${id})">Rename</button>
+      <button class="btn btn-danger btn-small" onclick="deleteDesign(${id})">Delete</button>
+    `;
+
     showSuccess(`Renamed to "${newName}"`);
-    loadDesigns();
   } catch (error) {
     console.error('Rename error:', error);
     showError(error.message || 'Failed to rename design.');
