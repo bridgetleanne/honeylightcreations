@@ -328,9 +328,10 @@ function escapeHtml(text) {
 
 // Render design card
 function renderCard(design) {
-  const tags = design.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  const tagsArr = Array.isArray(design.tags) ? design.tags : JSON.parse(design.tags || '[]');
+  const tags = tagsArr.map(t => `<span class="tag">${t}</span>`).join('');
   return `
-    <div class="design-card" data-name="${design.name.toLowerCase()}" data-tags="${design.tags.join(' ')}">
+    <div class="design-card" data-name="${design.name.toLowerCase()}" data-tags="${tagsArr.join(' ')}">
       <div class="design-card-img">
         <img src="${design.image_url}" alt="${escapeHtml(design.name)}" loading="lazy" />
       </div>
@@ -348,8 +349,9 @@ function renderCard(design) {
 function applyFilters() {
   const grid = document.getElementById('gallery-grid');
   const filtered = allDesigns.filter(d => {
+    const tagsArr = Array.isArray(d.tags) ? d.tags : JSON.parse(d.tags || '[]');
     const matchesSearch = !searchQuery || d.name.toLowerCase().includes(searchQuery);
-    const matchesTag = !activeTag || d.tags.includes(activeTag);
+    const matchesTag = !activeTag || tagsArr.includes(activeTag);
     return matchesSearch && matchesTag;
   });
 
