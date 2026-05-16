@@ -63,13 +63,11 @@ function showProductModal(designId) {
     const productsHTML = availableProducts.map(product => {
       const imageHTML = product.image_url
         ? `<img src="${product.image_url}" alt="${escapeHtml(product.name)}" loading="lazy">`
-        : '<div class="product-option-placeholder">📦<br><span>No image</span></div>';
-      
+        : '';
+
       return `
         <div class="product-option-card" onclick="selectProduct('${product.id}')">
-          <div class="product-option-image">
-            ${imageHTML}
-          </div>
+          ${imageHTML ? `<div class="product-option-image">${imageHTML}</div>` : ''}
           <div class="product-option-info">
             <h4>${escapeHtml(product.name)}</h4>
             <p class="product-option-price">${product.price ? product.price.formatted : 'Price varies'}</p>
