@@ -332,25 +332,25 @@ async function loadDesigns() {
 
     container.innerHTML = allDesigns.map(design => {
       const tags = Array.isArray(design.tags) ? design.tags : JSON.parse(design.tags || '[]');
+      const tagChipsHTML = tags.length
+        ? tags.map(t => `<span class="admin-tag-chip">#${escapeHtml(t)}</span>`).join('')
+        : '<span class="admin-tag-empty">No tags</span>';
       return `
       <div class="design-item" data-id="${design.id}">
         <div class="design-info">
           <img src="${design.image_url}" alt="${escapeHtml(design.name)}" class="design-thumb" />
           <div class="design-details">
             <h4 class="design-name-label">${escapeHtml(design.name)}</h4>
-            <div class="design-tags">${tags.map(t => `#${t}`).join(' ')}</div>
+            <div class="design-tags" id="tag-display-${design.id}">${tagChipsHTML}</div>
           </div>
         </div>
         <div class="design-actions">
           <button class="btn btn-outline btn-small" onclick="toggleDesignVisibility(${design.id})">
             ${design.available !== false ? 'Hide' : 'Show'}
           </button>
-          <button class="btn btn-outline btn-small" onclick="startRename(${design.id})">
-            Rename
-          </button>
-          <button class="btn btn-danger btn-small" onclick="deleteDesign(${design.id})">
-            Delete
-          </button>
+          <button class="btn btn-outline btn-small" onclick="startRename(${design.id})">Rename</button>
+          <button class="btn btn-outline btn-small" onclick="startEditTags(${design.id})">Tags</button>
+          <button class="btn btn-danger btn-small" onclick="deleteDesign(${design.id})">Delete</button>
         </div>
       </div>
     `;
@@ -472,6 +472,7 @@ async function saveRename(id) {
         ${design?.available !== false ? 'Hide' : 'Show'}
       </button>
       <button class="btn btn-outline btn-small" onclick="startRename(${id})">Rename</button>
+      <button class="btn btn-outline btn-small" onclick="startEditTags(${id})">Tags</button>
       <button class="btn btn-danger btn-small" onclick="deleteDesign(${id})">Delete</button>
     `;
 
@@ -481,6 +482,131 @@ async function saveRename(id) {
     showError(error.message || 'Failed to rename design.');
     if (input) input.disabled = false;
   }
+}
+
+// ── Tag editing ───────────────────────────────────────────────────
+
+// Working copy of tags while editing (keyed by design id)
+const _editingTags = {};
+
+function startEditTags(id) {
+  const design = allDesigns.find(d => d.id === id);
+  if (!design) return;
+
+  const currentTags = Array.isArray(design.tags)
+    ? [...design.tags]
+    : JSON.parse(design.tags || '[]');
+  _editingTags[id] = [...currentTags];
+
+  const tagDisplay = document.getElementById(`tag-display-${id}`);
+  tagDisplay.innerHTML = `
+    <div class="tag-editor" id="tag-editor-${id}">
+      <div class="tag-chip-row" id="tag-chip-row-${id}"></div>
+      <div class="tag-add-row">
+        <input type="text" class="tag-add-input" id="tag-add-input-${id}" placeholder="Add tag…" />
+        <button class="btn btn-outline btn-small" onclick="addTagInEditor(${id})">Add</button>
+      </div>
+      <div class="tag-editor-actions">
+        <button class="btn btn-primary btn-small" onclick="saveEditTags(${id})">Save Tags</button>
+        <button class="btn btn-outline btn-small" onclick="cancelEditTags(${id})">Cancel</button>
+      </div>
+    </div>
+  `;
+
+  renderEditingChips(id);
+
+  document.getElementById(`tag-add-input-${id}`)?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); addTagInEditor(id); }
+  });
+}
+
+function renderEditingChips(id) {
+  const row = document.getElementById(`tag-chip-row-${id}`);
+  if (!row) return;
+  const tags = _editingTags[id] || [];
+  row.innerHTML = tags.length
+    ? tags.map(t => `
+        <span class="admin-tag-chip editable">
+          #${escapeHtml(t)}
+          <button class="tag-chip-remove" onclick="removeTagInEditor(${id}, '${escapeHtml(t)}')" title="Remove">&times;</button>
+        </span>`).join('')
+    : '<span class="admin-tag-empty">No tags — add one below</span>';
+}
+
+function addTagInEditor(id) {
+  const input = document.getElementById(`tag-add-input-${id}`);
+  const raw = input?.value.trim().toLowerCase();
+  if (!raw) return;
+  const sanitized = raw.replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  if (!sanitized) { showError('Invalid tag name.'); return; }
+  if (!_editingTags[id]) _editingTags[id] = [];
+  if (!_editingTags[id].includes(sanitized)) {
+    _editingTags[id].push(sanitized);
+    renderEditingChips(id);
+  }
+  input.value = '';
+  input.focus();
+}
+
+function removeTagInEditor(id, tag) {
+  if (!_editingTags[id]) return;
+  _editingTags[id] = _editingTags[id].filter(t => t !== tag);
+  renderEditingChips(id);
+}
+
+async function saveEditTags(id) {
+  const newTags = _editingTags[id] || [];
+  const saveBtn = document.querySelector(`#tag-editor-${id} .btn-primary`);
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+
+  try {
+    const res = await fetch(
+      `${uploadConfig.supabaseUrl}/rest/v1/HoneyLightUploads?id=eq.${id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'apikey': uploadConfig.supabaseServiceKey,
+          'Authorization': `Bearer ${uploadConfig.supabaseServiceKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({ tags: newTags }),
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `Update failed (${res.status})`);
+    }
+
+    const design = allDesigns.find(d => d.id === id);
+    if (design) design.tags = newTags;
+    delete _editingTags[id];
+
+    // Restore tag display
+    const tagDisplay = document.getElementById(`tag-display-${id}`);
+    tagDisplay.innerHTML = newTags.length
+      ? newTags.map(t => `<span class="admin-tag-chip">#${escapeHtml(t)}</span>`).join('')
+      : '<span class="admin-tag-empty">No tags</span>';
+
+    showSuccess('Tags updated.');
+  } catch (error) {
+    console.error('Tag save error:', error);
+    showError(error.message || 'Failed to save tags.');
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Tags'; }
+  }
+}
+
+function cancelEditTags(id) {
+  const design = allDesigns.find(d => d.id === id);
+  delete _editingTags[id];
+  const tags = design
+    ? (Array.isArray(design.tags) ? design.tags : JSON.parse(design.tags || '[]'))
+    : [];
+  const tagDisplay = document.getElementById(`tag-display-${id}`);
+  tagDisplay.innerHTML = tags.length
+    ? tags.map(t => `<span class="admin-tag-chip">#${escapeHtml(t)}</span>`).join('')
+    : '<span class="admin-tag-empty">No tags</span>';
 }
 
 // Delete design (DB row + storage file)
