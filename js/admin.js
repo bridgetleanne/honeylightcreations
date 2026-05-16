@@ -356,10 +356,44 @@ async function loadDesigns() {
 }
 
 // Toggle design visibility
-async function toggleDesignVisibility(filename) {
-  // This would require a backend endpoint to update catalog.json
-  // For now, show a message
-  showError('Design visibility toggle requires backend implementation. Contact developer.');
+async function toggleDesignVisibility(id) {
+  const design = allDesigns.find(d => d.id === id);
+  if (!design) return;
+
+  const newAvailable = !design.available;
+  const btn = document.querySelector(`.design-item[data-id="${id}"] button`);
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+  try {
+    const res = await fetch(
+      `${uploadConfig.supabaseUrl}/rest/v1/HoneyLightUploads?id=eq.${id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'apikey': uploadConfig.supabaseServiceKey,
+          'Authorization': `Bearer ${uploadConfig.supabaseServiceKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({ available: newAvailable }),
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `Update failed (${res.status})`);
+    }
+
+    design.available = newAvailable;
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = newAvailable ? 'Hide' : 'Show';
+    }
+  } catch (error) {
+    console.error('Toggle error:', error);
+    showError(error.message || 'Failed to update design visibility.');
+    if (btn) { btn.disabled = false; btn.textContent = design.available ? 'Hide' : 'Show'; }
+  }
 }
 
 // Show success message
