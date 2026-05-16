@@ -19,7 +19,7 @@ const getSquareClient = () => {
 
 // Format price for display
 const formatPrice = (amount, currency = 'USD') => {
-  const dollars = amount / 100;
+  const dollars = Number(amount) / 100;
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,
@@ -48,7 +48,7 @@ const formatCatalogItem = (item, images = {}) => {
   if (defaultVariation && defaultVariation.itemVariationData.priceMoney) {
     const priceMoney = defaultVariation.itemVariationData.priceMoney;
     price = {
-      amount: priceMoney.amount,
+      amount: Number(priceMoney.amount),
       currency: priceMoney.currency,
       formatted: formatPrice(priceMoney.amount, priceMoney.currency),
     };
@@ -70,7 +70,7 @@ const formatCatalogItem = (item, images = {}) => {
     return {
       id: v.id,
       name: varData.name,
-      price: varPrice ? varPrice.amount : 0,
+      price: varPrice ? Number(varPrice.amount) : 0,
       formatted_price: varPrice ? formatPrice(varPrice.amount, varPrice.currency) : '$0.00',
       sku: varData.sku || null,
       ordinal: varData.ordinal || 0,
