@@ -123,12 +123,9 @@ class SquareCatalog {
    * Render individual product card
    */
   renderProductCard(product) {
-    const imageHTML = product.image_url 
+    const imageHTML = product.image_url
       ? `<img src="${product.image_url}" alt="${this.escapeHtml(product.name)}" loading="lazy">`
-      : `<div class="catalog-card-no-image">
-           <span style="font-size:3rem;">📦</span>
-           <p>No image</p>
-         </div>`;
+      : '';
 
     const stockBadge = !product.in_stock 
       ? '<div class="out-of-stock-badge">Out of Stock</div>' 
@@ -140,10 +137,7 @@ class SquareCatalog {
 
     return `
       <div class="catalog-card" data-product-id="${product.id}">
-        <div class="catalog-card-image">
-          ${imageHTML}
-          ${stockBadge}
-        </div>
+        ${imageHTML || stockBadge ? `<div class="catalog-card-image">${imageHTML}${stockBadge}</div>` : ''}
         <div class="catalog-card-body">
           <h3 class="catalog-card-title">${this.escapeHtml(product.name)}</h3>
           <p class="catalog-card-description">${this.escapeHtml(product.description || '')}</p>
@@ -176,10 +170,7 @@ class SquareCatalog {
 
     const imageHTML = product.image_url
       ? `<img src="${product.image_url}" alt="${this.escapeHtml(product.name)}">`
-      : `<div class="modal-no-image">
-           <span style="font-size:5rem;">📦</span>
-           <p>No image available</p>
-         </div>`;
+      : '';
 
     const variationsHTML = product.variations.length > 1
       ? `
@@ -218,10 +209,8 @@ class SquareCatalog {
       <div class="modal-overlay"></div>
       <div class="modal-content">
         <button class="modal-close" aria-label="Close modal">&times;</button>
-        <div class="modal-body">
-          <div class="modal-image">
-            ${imageHTML}
-          </div>
+        <div class="modal-body${imageHTML ? '' : ' modal-body--no-image'}">
+          ${imageHTML ? `<div class="modal-image">${imageHTML}</div>` : ''}
           <div class="modal-details">
             <h2 class="modal-title">${this.escapeHtml(product.name)}</h2>
             <p class="modal-price">${product.price ? product.price.formatted : 'Price varies'}</p>

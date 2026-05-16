@@ -1031,6 +1031,10 @@ h1, h2, h3, h4 {
   cursor: not-allowed;
 }
 
+.modal-body--no-image {
+  grid-template-columns: 1fr;
+}
+
 .modal-notice {
   font-size: 0.85rem;
   color: var(--text-light);
