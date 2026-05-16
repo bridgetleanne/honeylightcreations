@@ -36,21 +36,19 @@ class SquareCatalog {
   }
 
   /**
-   * Select a design in the picker
+   * Select a design and update the preview image
    */
   selectDesign(design) {
     this.selectedDesign = design;
 
-    document.querySelectorAll('.design-thumb-btn').forEach(btn => {
-      btn.classList.toggle('selected', Number(btn.dataset.designId) === design.id);
-    });
-
-    const label = document.getElementById('design-picker-selected');
-    const name  = document.getElementById('design-picker-name');
-    if (label && name) {
-      name.textContent = design.name;
-      label.style.display = 'block';
+    const preview = document.getElementById('design-picker-preview');
+    const placeholder = document.getElementById('design-picker-placeholder');
+    if (preview) {
+      preview.src = design.image_url;
+      preview.alt = design.name;
+      preview.style.display = 'block';
     }
+    if (placeholder) placeholder.style.display = 'none';
   }
 
   /**
@@ -198,20 +196,21 @@ class SquareCatalog {
 
     const designPickerHTML = this.designs.length > 0 ? `
       <div class="modal-design-picker" id="modal-design-picker">
-        <label class="design-picker-label">
+        <label class="design-picker-label" for="design-select">
           Choose your design <span class="design-picker-required">*</span>
         </label>
-        <div class="design-thumb-grid">
+        <select id="design-select" class="modal-select">
+          <option value="">— Select a design —</option>
           ${this.designs.map(d => `
-            <button class="design-thumb-btn" data-design-id="${d.id}" title="${this.escapeHtml(d.name)}" type="button">
-              <img src="${d.image_url}" alt="${this.escapeHtml(d.name)}" loading="lazy">
-              <span class="design-thumb-name">${this.escapeHtml(d.name)}</span>
-            </button>
+            <option value="${d.id}">${this.escapeHtml(d.name)}</option>
           `).join('')}
+        </select>
+        <div class="design-picker-preview-wrap">
+          <span id="design-picker-placeholder" class="design-picker-placeholder">
+            Select a design above to see a preview
+          </span>
+          <img id="design-picker-preview" src="" alt="" style="display:none;">
         </div>
-        <p class="design-picker-selected" id="design-picker-selected" style="display:none;">
-          ✓ Selected: <strong id="design-picker-name"></strong>
-        </p>
       </div>
     ` : '';
 
@@ -253,13 +252,23 @@ class SquareCatalog {
     modal.querySelector('.modal-close').addEventListener('click', () => this.closeModal());
     modal.querySelector('#modal-buy-btn').addEventListener('click', () => this.handleBuyNow());
 
-    // Design picker clicks
-    modal.querySelectorAll('.design-thumb-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const design = this.designs.find(d => d.id === Number(btn.dataset.designId));
-        if (design) this.selectDesign(design);
+    // Design dropdown change
+    const designSelect = modal.querySelector('#design-select');
+    if (designSelect) {
+      designSelect.addEventListener('change', () => {
+        const design = this.designs.find(d => d.id === Number(designSelect.value));
+        if (design) {
+          this.selectDesign(design);
+          modal.querySelector('#modal-design-picker')?.classList.remove('picker-shake');
+        } else {
+          this.selectedDesign = null;
+          const preview = document.getElementById('design-picker-preview');
+          const placeholder = document.getElementById('design-picker-placeholder');
+          if (preview) preview.style.display = 'none';
+          if (placeholder) placeholder.style.display = 'block';
+        }
       });
-    });
+    }
 
     // Show modal
     modal.classList.add('active');
