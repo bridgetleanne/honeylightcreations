@@ -111,22 +111,29 @@
 </footer>
 
 <script>
-  // Load featured designs (first 8 from catalog)
-  fetch('catalog.json')
+  // Load featured designs (first 8 from Supabase via API)
+  fetch('/api/get-catalog')
     .then(r => r.json())
     .then(designs => {
       const grid = document.getElementById('featured-grid');
-      grid.innerHTML = designs.slice(0, 8).map(d => `
+      if (!designs.length) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--text-light);grid-column:1/-1">Browse our designs on the Designs page!</p>';
+        return;
+      }
+      grid.innerHTML = designs.slice(0, 8).map(d => {
+        const tags = Array.isArray(d.tags) ? d.tags : JSON.parse(d.tags || '[]');
+        return `
           <div class="design-card">
             <div class="design-card-img">
               <img src="${d.image_url}" alt="${d.name}" loading="lazy" />
             </div>
             <div class="design-card-body">
               <div class="design-card-name">${d.name}</div>
-              <div class="design-card-tags">${d.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+              <div class="design-card-tags">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
               <a href="designs.html?design=${encodeURIComponent(d.name)}" class="btn btn-primary design-card-btn">Order This Design</a>
             </div>
-          </div>`).join('');
+          </div>`;
+      }).join('');
     })
     .catch(() => {
       document.getElementById('featured-grid').innerHTML = '<p style="text-align:center;color:var(--text-light);grid-column:1/-1">Browse our designs on the Designs page!</p>';
