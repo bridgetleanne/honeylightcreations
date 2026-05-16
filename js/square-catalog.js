@@ -11,8 +11,46 @@ class SquareCatalog {
     this.errorElement = options.errorElement;
     this.onError = options.onError || console.error;
     this.products = [];
+    this.designs = [];
     this.currentProduct = null;
     this.currentCategory = 'all';
+    this.selectedDesign = null;
+  }
+
+  /**
+   * Fetch available designs for the design picker
+   */
+  async fetchDesigns() {
+    try {
+      const res = await fetch(`${this.apiBase}/get-catalog`);
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        this.designs = data.map(d => ({
+          ...d,
+          tags: Array.isArray(d.tags) ? d.tags : JSON.parse(d.tags || '[]'),
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to fetch designs:', err);
+    }
+  }
+
+  /**
+   * Select a design in the picker
+   */
+  selectDesign(design) {
+    this.selectedDesign = design;
+
+    document.querySelectorAll('.design-thumb-btn').forEach(btn => {
+      btn.classList.toggle('selected', Number(btn.dataset.designId) === design.id);
+    });
+
+    const label = document.getElementById('design-picker-selected');
+    const name  = document.getElementById('design-picker-name');
+    if (label && name) {
+      name.textContent = design.name;
+      label.style.display = 'block';
+    }
   }
 
   /**
@@ -127,6 +165,7 @@ class SquareCatalog {
    */
   showProductModal(product) {
     this.currentProduct = product;
+    this.selectedDesign = null;
 
     // Create modal if it doesn't exist
     let modal = document.getElementById('product-modal');
@@ -137,14 +176,14 @@ class SquareCatalog {
       document.body.appendChild(modal);
     }
 
-    const imageHTML = product.image_url 
+    const imageHTML = product.image_url
       ? `<img src="${product.image_url}" alt="${this.escapeHtml(product.name)}">`
       : `<div class="modal-no-image">
            <span style="font-size:5rem;">📦</span>
            <p>No image available</p>
          </div>`;
 
-    const variationsHTML = product.variations.length > 1 
+    const variationsHTML = product.variations.length > 1
       ? `
         <div class="modal-variations">
           <label for="variation-select">Select Option:</label>
@@ -156,6 +195,25 @@ class SquareCatalog {
         </div>
       `
       : '';
+
+    const designPickerHTML = this.designs.length > 0 ? `
+      <div class="modal-design-picker" id="modal-design-picker">
+        <label class="design-picker-label">
+          Choose your design <span class="design-picker-required">*</span>
+        </label>
+        <div class="design-thumb-grid">
+          ${this.designs.map(d => `
+            <button class="design-thumb-btn" data-design-id="${d.id}" title="${this.escapeHtml(d.name)}" type="button">
+              <img src="${d.image_url}" alt="${this.escapeHtml(d.name)}" loading="lazy">
+              <span class="design-thumb-name">${this.escapeHtml(d.name)}</span>
+            </button>
+          `).join('')}
+        </div>
+        <p class="design-picker-selected" id="design-picker-selected" style="display:none;">
+          ✓ Selected: <strong id="design-picker-name"></strong>
+        </p>
+      </div>
+    ` : '';
 
     modal.innerHTML = `
       <div class="modal-overlay"></div>
@@ -169,18 +227,19 @@ class SquareCatalog {
             <h2 class="modal-title">${this.escapeHtml(product.name)}</h2>
             <p class="modal-price">${product.price ? product.price.formatted : 'Price varies'}</p>
             <p class="modal-description">${this.escapeHtml(product.description || 'No description available.')}</p>
-            
+
+            ${designPickerHTML}
             ${variationsHTML}
-            
+
             <div class="modal-quantity">
               <label for="quantity-input">Quantity:</label>
               <input type="number" id="quantity-input" class="modal-input" value="1" min="1" max="10">
             </div>
-            
+
             <button class="btn btn-primary modal-buy-btn" id="modal-buy-btn">
               Buy Now
             </button>
-            
+
             <p class="modal-notice">
               You'll be redirected to Square's secure checkout to complete your purchase.
             </p>
@@ -193,6 +252,14 @@ class SquareCatalog {
     modal.querySelector('.modal-overlay').addEventListener('click', () => this.closeModal());
     modal.querySelector('.modal-close').addEventListener('click', () => this.closeModal());
     modal.querySelector('#modal-buy-btn').addEventListener('click', () => this.handleBuyNow());
+
+    // Design picker clicks
+    modal.querySelectorAll('.design-thumb-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const design = this.designs.find(d => d.id === Number(btn.dataset.designId));
+        if (design) this.selectDesign(design);
+      });
+    });
 
     // Show modal
     modal.classList.add('active');
@@ -216,9 +283,20 @@ class SquareCatalog {
   async handleBuyNow() {
     if (!this.currentProduct) return;
 
+    // Require a design if any are available
+    if (this.designs.length > 0 && !this.selectedDesign) {
+      const picker = document.getElementById('modal-design-picker');
+      if (picker) {
+        picker.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        picker.classList.add('picker-shake');
+        setTimeout(() => picker.classList.remove('picker-shake'), 600);
+      }
+      return;
+    }
+
     const buyBtn = document.getElementById('modal-buy-btn');
     const originalText = buyBtn.textContent;
-    
+
     try {
       buyBtn.disabled = true;
       buyBtn.textContent = 'Processing...';
@@ -241,13 +319,14 @@ class SquareCatalog {
       // Create checkout
       const response = await fetch(`${this.apiBase}/square-checkout`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           variation_id: variationId,
           quantity: quantity,
-          note: `Product: ${this.currentProduct.name}`,
+          design: this.selectedDesign ? {
+            name: this.selectedDesign.name,
+            imageUrl: this.selectedDesign.image_url,
+          } : undefined,
         }),
       });
 
@@ -342,7 +421,8 @@ document.addEventListener('DOMContentLoaded', () => {
     errorElement: document.getElementById('catalog-error'),
   });
 
-  // Load products
+  // Load products and designs in parallel
+  catalog.fetchDesigns();
   catalog.fetchProducts();
 
   // Setup category filters
