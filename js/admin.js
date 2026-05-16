@@ -337,13 +337,19 @@ async function loadDesigns() {
         <div class="design-info">
           <img src="${design.image_url}" alt="${escapeHtml(design.name)}" class="design-thumb" />
           <div class="design-details">
-            <h4>${escapeHtml(design.name)}</h4>
+            <h4 class="design-name-label">${escapeHtml(design.name)}</h4>
             <div class="design-tags">${tags.map(t => `#${t}`).join(' ')}</div>
           </div>
         </div>
         <div class="design-actions">
           <button class="btn btn-outline btn-small" onclick="toggleDesignVisibility(${design.id})">
             ${design.available !== false ? 'Hide' : 'Show'}
+          </button>
+          <button class="btn btn-outline btn-small" onclick="startRename(${design.id})">
+            Rename
+          </button>
+          <button class="btn btn-danger btn-small" onclick="deleteDesign(${design.id})">
+            Delete
           </button>
         </div>
       </div>
@@ -393,6 +399,129 @@ async function toggleDesignVisibility(id) {
     console.error('Toggle error:', error);
     showError(error.message || 'Failed to update design visibility.');
     if (btn) { btn.disabled = false; btn.textContent = design.available ? 'Hide' : 'Show'; }
+  }
+}
+
+// Start inline rename
+function startRename(id) {
+  const item = document.querySelector(`.design-item[data-id="${id}"]`);
+  if (!item) return;
+
+  const label = item.querySelector('.design-name-label');
+  const currentName = label.textContent;
+
+  // Swap label for input
+  label.outerHTML = `<input type="text" class="rename-input" id="rename-input-${id}" value="${escapeHtml(currentName)}" />`;
+
+  // Swap Rename button for Save / Cancel
+  const renameBtn = [...item.querySelectorAll('.design-actions button')]
+    .find(b => b.textContent.trim() === 'Rename');
+  if (renameBtn) {
+    renameBtn.textContent = 'Save';
+    renameBtn.onclick = () => saveRename(id);
+  }
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.className = 'btn btn-outline btn-small';
+  cancelBtn.textContent = 'Cancel';
+  cancelBtn.onclick = () => loadDesigns();
+  renameBtn?.insertAdjacentElement('afterend', cancelBtn);
+
+  document.getElementById(`rename-input-${id}`)?.focus();
+}
+
+// Save rename
+async function saveRename(id) {
+  const input = document.getElementById(`rename-input-${id}`);
+  const newName = input?.value.trim();
+  if (!newName) { showError('Name cannot be empty.'); return; }
+
+  input.disabled = true;
+
+  try {
+    const res = await fetch(
+      `${uploadConfig.supabaseUrl}/rest/v1/HoneyLightUploads?id=eq.${id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'apikey': uploadConfig.supabaseServiceKey,
+          'Authorization': `Bearer ${uploadConfig.supabaseServiceKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({ name: newName }),
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `Update failed (${res.status})`);
+    }
+
+    const design = allDesigns.find(d => d.id === id);
+    if (design) design.name = newName;
+
+    showSuccess(`Renamed to "${newName}"`);
+    loadDesigns();
+  } catch (error) {
+    console.error('Rename error:', error);
+    showError(error.message || 'Failed to rename design.');
+    if (input) input.disabled = false;
+  }
+}
+
+// Delete design (DB row + storage file)
+async function deleteDesign(id) {
+  const design = allDesigns.find(d => d.id === id);
+  if (!design) return;
+
+  if (!confirm(`Delete "${design.name}"?\n\nThis will permanently remove the image and cannot be undone.`)) return;
+
+  const item = document.querySelector(`.design-item[data-id="${id}"]`);
+  const deleteBtn = [...item.querySelectorAll('.design-actions button')]
+    .find(b => b.textContent.trim() === 'Delete');
+  if (deleteBtn) { deleteBtn.disabled = true; deleteBtn.textContent = '...'; }
+
+  try {
+    // 1. Remove from Supabase Storage
+    const fileName = design.public_id.replace(/^designs\//, '');
+    await fetch(
+      `${uploadConfig.supabaseUrl}/storage/v1/object/designs`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${uploadConfig.supabaseServiceKey}`,
+          'apikey': uploadConfig.supabaseServiceKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prefixes: [fileName] }),
+      }
+    );
+
+    // 2. Remove DB row
+    const res = await fetch(
+      `${uploadConfig.supabaseUrl}/rest/v1/HoneyLightUploads?id=eq.${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'apikey': uploadConfig.supabaseServiceKey,
+          'Authorization': `Bearer ${uploadConfig.supabaseServiceKey}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `Delete failed (${res.status})`);
+    }
+
+    allDesigns = allDesigns.filter(d => d.id !== id);
+    item.remove();
+    showSuccess(`"${design.name}" deleted.`);
+  } catch (error) {
+    console.error('Delete error:', error);
+    showError(error.message || 'Failed to delete design.');
+    if (deleteBtn) { deleteBtn.disabled = false; deleteBtn.textContent = 'Delete'; }
   }
 }
 
