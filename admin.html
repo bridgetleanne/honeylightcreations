@@ -270,6 +270,85 @@
     .design-tags {
       font-size: 0.85rem;
       color: var(--text-light);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.25rem;
+    }
+
+    .admin-tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--pink-pale);
+      border: 1px solid rgba(182,33,90,0.2);
+      color: var(--pink-deep);
+      border-radius: 20px;
+      padding: 0.15rem 0.55rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .admin-tag-chip.editable {
+      padding-right: 0.3rem;
+    }
+
+    .tag-chip-remove {
+      background: none;
+      border: none;
+      color: var(--pink-deep);
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1;
+      padding: 0 0.1rem;
+      opacity: 0.6;
+    }
+
+    .tag-chip-remove:hover { opacity: 1; }
+
+    .admin-tag-empty {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    .tag-editor {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .tag-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      min-height: 1.5rem;
+    }
+
+    .tag-add-row {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .tag-add-input {
+      font-size: 0.85rem;
+      font-family: inherit;
+      border: 1.5px solid rgba(182,33,90,0.25);
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+      width: 140px;
+    }
+
+    .tag-add-input:focus {
+      outline: none;
+      border-color: var(--pink-deep);
+    }
+
+    .tag-editor-actions {
+      display: flex;
+      gap: 0.4rem;
     }
 
     .design-actions {
